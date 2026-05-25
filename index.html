@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LOCK-IN — Daily Shift: Hematology</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0e1820; --bg-2:#122029; --panel:#16242f; --panel-2:#1c303c; --line:#294150;
+    --teal:#2d7d9a; --teal-bright:#45b4c8; --amber:#e0a458; --amber-soft:#f0c98c;
+    --green:#5fc093; --red:#df7474; --ink:#e9eef1; --ink-mute:#88a0ad; --ink-faint:#5d7884;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'DM Sans',sans-serif;
+    background:
+      radial-gradient(900px 600px at 80% -5%,rgba(45,125,154,0.20),transparent 60%),
+      radial-gradient(700px 500px at -5% 100%,rgba(224,164,88,0.10),transparent 55%),
+      var(--bg);
+    color:var(--ink); min-height:100vh; -webkit-font-smoothing:antialiased;
+    display:flex; justify-content:center; padding:26px 16px 60px;
+  }
+  body::before{content:"";position:fixed;inset:0;
+    background-image:repeating-linear-gradient(0deg,rgba(255,255,255,0.014) 0 1px,transparent 1px 3px);
+    pointer-events:none;z-index:0;}
+  .app{width:100%;max-width:720px;position:relative;z-index:1;}
+
+  .topbar{display:flex;align-items:baseline;justify-content:space-between;
+    border-bottom:1px solid var(--line);padding-bottom:13px;margin-bottom:18px;}
+  .brand{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;}
+  .logo{font-family:'Fraunces',serif;font-weight:600;font-size:1.4rem;letter-spacing:.14em;}
+  .logo b{color:var(--teal-bright);}
+  .tagline{font-size:.7rem;color:var(--ink-faint);letter-spacing:.05em;}
+  .shift-meta{font-size:.72rem;color:var(--ink-mute);text-align:right;letter-spacing:.04em;}
+  .shift-meta b{color:var(--amber-soft);font-weight:500;}
+
+  /* status strip */
+  .status{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;}
+  .stat{flex:1;min-width:120px;background:var(--panel);border:1px solid var(--line);
+    border-radius:9px;padding:9px 13px;}
+  .stat .k{font-size:.62rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-faint);}
+  .stat .v{font-family:'Fraunces',serif;font-size:1.15rem;margin-top:2px;}
+  .stat .v.teal{color:var(--teal-bright);} .stat .v.amber{color:var(--amber-soft);}
+  .hp-track{height:7px;background:var(--bg-2);border-radius:999px;border:1px solid var(--line);
+    overflow:hidden;margin-top:6px;}
+  .hp-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--teal-bright));transition:width .5s;}
+
+  .screen{display:none;animation:fade .4s ease;}
+  .screen.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+  .card-box{background:linear-gradient(180deg,var(--panel-2),var(--panel));
+    border:1px solid var(--line);border-radius:14px;padding:30px 30px;}
+  .kicker{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--teal-bright);margin-bottom:13px;}
+  h1{font-family:'Fraunces',serif;font-weight:600;font-size:1.85rem;line-height:1.15;margin-bottom:11px;}
+  h1 em{font-style:italic;color:var(--amber-soft);}
+  .lead{color:var(--ink-mute);font-size:.96rem;line-height:1.6;max-width:54ch;}
+  .loop{display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin:22px 0 24px;}
+  .loop .step{background:var(--bg-2);border:1px solid var(--line);border-radius:999px;
+    padding:6px 13px;font-size:.78rem;}
+  .loop .step b{color:var(--teal-bright);}
+  .loop .arrow{color:var(--ink-faint);}
+
+  .btn{font-family:'DM Sans',sans-serif;font-weight:700;font-size:.9rem;border:none;
+    border-radius:10px;padding:13px 26px;cursor:pointer;letter-spacing:.02em;
+    transition:transform .12s,box-shadow .18s,background .18s;}
+  .btn-primary{background:linear-gradient(180deg,var(--teal-bright),var(--teal));color:#051018;
+    box-shadow:0 6px 20px rgba(45,125,154,.35);}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(69,180,200,.4);}
+  .btn-primary:disabled{background:var(--panel-2);color:var(--ink-faint);cursor:not-allowed;
+    box-shadow:none;transform:none;}
+  .btn-ghost{background:transparent;color:var(--ink-mute);border:1px solid var(--line);}
+  .btn-ghost:hover{color:var(--ink);border-color:var(--teal);}
+
+  .stem{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--amber);
+    border-radius:10px;padding:17px 19px;margin-bottom:15px;}
+  .stem .case-no{font-size:.68rem;letter-spacing:.16em;color:var(--amber);text-transform:uppercase;margin-bottom:6px;}
+  .stem p{font-size:1.03rem;line-height:1.55;}
+
+  .budget{display:flex;align-items:center;gap:11px;margin:16px 0 11px;}
+  .budget .label{font-size:.72rem;letter-spacing:.1em;color:var(--ink-mute);text-transform:uppercase;}
+  .pips{display:flex;gap:5px;}
+  .pip{width:21px;height:8px;border-radius:3px;background:var(--amber);transition:background .3s;}
+  .pip.spent{background:var(--bg-2);border:1px solid var(--line);}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+  @media(max-width:540px){.grid{grid-template-columns:1fr;}}
+  .clue{background:var(--panel);border:1px solid var(--line);border-radius:11px;
+    overflow:hidden;transition:border-color .2s,transform .12s;}
+  .clue.free{grid-column:1/-1;}
+  .clue-locked{cursor:pointer;}
+  .clue-locked:hover{border-color:var(--teal);transform:translateY(-2px);}
+  .plate{height:118px;position:relative;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,rgba(45,125,154,.14),rgba(224,164,88,.06)),var(--bg-2);
+    border-bottom:1px solid var(--line);overflow:hidden;}
+  .plate svg{width:60px;height:60px;opacity:.85;}
+  .plate-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .35s;}
+  .plate-img.on{opacity:1;}
+  .ghost-tag{position:absolute;bottom:6px;right:8px;font-size:.56rem;letter-spacing:.07em;
+    color:var(--ink-faint);text-transform:uppercase;background:rgba(14,24,32,.6);padding:2px 5px;border-radius:3px;}
+  .clue-body{padding:12px 14px 14px;}
+  .clue-type{font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-bright);margin-bottom:5px;}
+  .clue-finding{font-size:.88rem;line-height:1.5;}
+  .locked-face{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:25px 12px;}
+  .lock-q{font-family:'Fraunces',serif;font-size:1.7rem;color:var(--ink-faint);width:44px;height:44px;
+    border:1px dashed var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+  .lock-label{font-size:.7rem;letter-spacing:.1em;color:var(--ink-mute);text-transform:uppercase;}
+  .lock-cost{font-size:.72rem;color:var(--amber);font-weight:700;
+    border:1px solid rgba(224,164,88,.4);border-radius:999px;padding:3px 10px;}
+  .reveal-anim{animation:pop .34s cubic-bezier(.2,.9,.3,1.2);}
+  @keyframes pop{from{opacity:0;transform:scale(.94);}to{opacity:1;transform:scale(1);}}
+
+  .case-actions{display:flex;gap:11px;align-items:center;margin-top:20px;flex-wrap:wrap;}
+  .case-actions .hint{font-size:.76rem;color:var(--ink-faint);line-height:1.4;flex:1;min-width:160px;}
+
+  .panel-h{font-family:'Fraunces',serif;font-size:1.28rem;font-weight:600;margin-bottom:4px;}
+  .panel-sub{font-size:.82rem;color:var(--ink-mute);margin-bottom:14px;}
+  .section-tag{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);
+    margin:20px 0 9px;display:flex;align-items:center;gap:8px;}
+  .section-tag .num{background:var(--amber);color:#1a1208;border-radius:50%;width:18px;height:18px;
+    display:flex;align-items:center;justify-content:center;font-size:.64rem;font-weight:700;}
+  .opt{width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);
+    border-radius:9px;padding:12px 15px;margin-bottom:7px;cursor:pointer;color:var(--ink);
+    font-family:'DM Sans',sans-serif;font-size:.9rem;transition:border-color .15s,background .15s;}
+  .opt:hover{border-color:var(--teal);}
+  .opt.selected{border-color:var(--teal-bright);background:rgba(45,125,154,.16);
+    box-shadow:inset 0 0 0 1px var(--teal-bright);}
+  .opt.disabled{opacity:.4;pointer-events:none;}
+
+  .conf-box{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:17px 19px;margin-top:8px;}
+  .conf-row{display:flex;justify-content:space-between;align-items:baseline;}
+  .conf-val{font-family:'Fraunces',serif;font-size:1.9rem;font-weight:600;color:var(--teal-bright);}
+  .conf-word{font-size:.8rem;color:var(--ink-mute);}
+  input[type=range]{-webkit-appearance:none;width:100%;height:6px;border-radius:999px;
+    background:linear-gradient(90deg,var(--teal),var(--amber));margin:13px 0 6px;outline:none;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:21px;height:21px;border-radius:50%;
+    background:var(--ink);border:3px solid var(--teal-bright);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.5);}
+  input[type=range]::-moz-range-thumb{width:21px;height:21px;border-radius:50%;background:var(--ink);
+    border:3px solid var(--teal-bright);cursor:pointer;}
+  .conf-note{font-size:.75rem;color:var(--ink-faint);line-height:1.45;}
+
+  .verdict-flag{font-family:'Fraunces',serif;font-size:1.6rem;font-weight:600;
+    display:flex;align-items:center;gap:11px;margin-bottom:3px;}
+  .verdict-flag.win{color:var(--green);} .verdict-flag.loss{color:var(--red);}
+  .dot{width:13px;height:13px;border-radius:50%;}
+  .dot.win{background:var(--green);} .dot.loss{background:var(--red);}
+  .verdict-sub{color:var(--ink-mute);font-size:.88rem;margin-bottom:18px;}
+
+  .ledger{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:5px 0;margin:14px 0;}
+  .ledger-row{display:flex;justify-content:space-between;padding:8px 2px;font-size:.89rem;}
+  .ledger-row span:first-child{color:var(--ink-mute);}
+  .ledger-row span:last-child{font-variant-numeric:tabular-nums;font-weight:500;}
+  .ledger-row.total{border-top:1px dashed var(--line);margin-top:3px;}
+  .ledger-row.total span{font-size:1.02rem;}
+  .ledger-row.total span:last-child{font-family:'Fraunces',serif;font-size:1.55rem;color:var(--teal-bright);}
+  .pos{color:var(--green);} .neg{color:var(--red);}
+
+  .card-earn{display:flex;gap:14px;align-items:center;
+    background:linear-gradient(135deg,rgba(224,164,88,.18),rgba(45,125,154,.12));
+    border:1px solid var(--amber);border-radius:11px;padding:14px;margin:16px 0;
+    animation:cardpop .5s cubic-bezier(.2,.9,.3,1.3);}
+  @keyframes cardpop{from{opacity:0;transform:scale(.9) rotate(-3deg);}to{opacity:1;transform:none;}}
+  .card-mini{width:56px;height:74px;border-radius:7px;flex-shrink:0;overflow:hidden;position:relative;
+    background:linear-gradient(160deg,var(--teal),#0d2630);border:1px solid var(--teal-bright);
+    display:flex;align-items:center;justify-content:center;}
+  .card-mini svg{width:32px;height:32px;}
+  .card-mini .plate-img{border-radius:0;}
+  .ce-tag{font-size:.64rem;letter-spacing:.14em;color:var(--amber);text-transform:uppercase;}
+  .ce-name{font-family:'Fraunces',serif;font-size:1.02rem;font-weight:600;margin-top:2px;}
+  .ce-desc{font-size:.77rem;color:var(--ink-mute);margin-top:3px;}
+
+  .cmp{margin:16px 0;}
+  .cmp-tag{font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--teal-bright);margin-bottom:9px;}
+  .cmp-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+  .cmp-cell{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  .cmp-cell.correct{border-color:var(--green);}
+  .cmp-cell .plate{height:120px;}
+  .cmp-cap{padding:9px 12px;}
+  .cmp-cap .role{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);}
+  .cmp-cap .role.win{color:var(--green);}
+  .cmp-cap .nm{font-size:.86rem;font-weight:500;margin-top:2px;}
+
+  .calib{background:var(--bg-2);border:1px solid var(--line);border-left:3px solid var(--teal);
+    border-radius:8px;padding:12px 15px;font-size:.87rem;line-height:1.5;margin:15px 0;}
+  .calib b{color:var(--amber-soft);}
+
+  .acumen-box{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:15px 17px;margin:15px 0;}
+  .acumen-row{display:flex;justify-content:space-between;align-items:baseline;}
+  .acumen-row .lbl{font-size:.82rem;color:var(--ink-mute);}
+  .acumen-row .amt{font-family:'Fraunces',serif;font-size:1.3rem;color:var(--amber-soft);}
+  .mile-track{height:9px;background:var(--bg-2);border:1px solid var(--line);border-radius:999px;
+    overflow:hidden;margin:11px 0 6px;}
+  .mile-fill{height:100%;background:linear-gradient(90deg,var(--amber),var(--amber-soft));transition:width .6s;}
+  .mile-note{font-size:.74rem;color:var(--ink-faint);}
+  .mile-hit{color:var(--amber-soft);font-weight:700;}
+
+  .teach{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:17px 19px;margin:16px 0 6px;}
+  .t-tag{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--teal-bright);margin-bottom:7px;}
+  .teach p{font-size:.89rem;line-height:1.62;}
+  .teach p+p{margin-top:8px;}
+  .teach .pearl{margin-top:10px;padding-top:9px;border-top:1px dashed var(--line);
+    font-size:.86rem;color:var(--amber-soft);font-style:italic;}
+
+  .summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:18px 0;}
+  .sum-cell{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:15px 17px;text-align:center;}
+  .sum-cell .k{font-size:.65rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-faint);}
+  .sum-cell .v{font-family:'Fraunces',serif;font-size:1.7rem;margin-top:4px;color:var(--teal-bright);}
+  .sum-cell .v.amber{color:var(--amber-soft);}
+  .footnote{text-align:center;font-size:.73rem;color:var(--ink-faint);margin-top:24px;line-height:1.5;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="topbar">
+    <div class="brand">
+      <span class="logo">LOCK&#8231;<b>IN</b></span>
+      <span class="tagline">an Eduovisual concept prototype</span>
+    </div>
+    <div class="shift-meta">Daily Shift &middot; <b>Hematology</b><br /><span id="caseCount">10 cases</span></div>
+  </div>
+
+  <div class="status" id="statusStrip" style="display:none;">
+    <div class="stat">
+      <div class="k">Shift vitals</div>
+      <div class="v" id="hpV">100 HP</div>
+      <div class="hp-track"><div class="hp-fill" id="hpFill"></div></div>
+    </div>
+    <div class="stat"><div class="k">Shift score</div><div class="v teal" id="scoreV">0</div></div>
+    <div class="stat"><div class="k">Acumen banked</div><div class="v amber" id="acumenV">0</div></div>
+  </div>
+
+  <!-- INTRO -->
+  <section class="screen active" id="screen-intro">
+    <div class="card-box">
+      <div class="kicker">USMLE Step 1 &middot; Deduction Mode</div>
+      <h1>Ten patients. One shift.<br />Work each one <em>up.</em></h1>
+      <p class="lead">
+        Every case opens with a single image and a one-line complaint. Spend your clinical
+        actions to reveal findings, name the disease and its mechanism, and bet your confidence.
+        Vitals carry across all ten cases &mdash; a confident miss drains them. Unused actions
+        bank as <b style="color:var(--amber-soft)">Acumen</b>, with rewards at 5 and 10 clean solves.
+      </p>
+      <div class="loop">
+        <span class="step"><b>1</b> Reveal a clue</span><span class="arrow">&rarr;</span>
+        <span class="step"><b>2</b> Build the differential</span><span class="arrow">&rarr;</span>
+        <span class="step"><b>3</b> Bet confidence</span><span class="arrow">&rarr;</span>
+        <span class="step"><b>4</b> Lock in</span>
+      </div>
+      <button class="btn btn-primary" onclick="startShift()">Begin shift &rarr;</button>
+    </div>
+    <p class="footnote">
+      Prototype &middot; 10 hand-built cases. Image plates show placeholders until illustrations
+      are added &mdash; the loop is fully playable now.
+    </p>
+  </section>
+
+  <!-- CASE -->
+  <section class="screen" id="screen-case">
+    <div class="stem">
+      <div class="case-no" id="caseNo">Case 1 of 10 &middot; Presenting complaint</div>
+      <p id="stemText"></p>
+    </div>
+    <div class="budget">
+      <span class="label">Clinical actions</span>
+      <div class="pips" id="pips"></div>
+    </div>
+    <div class="grid" id="clueGrid"></div>
+    <div class="case-actions">
+      <button class="btn btn-primary" onclick="go('lockin')">Lock in diagnosis &rarr;</button>
+      <span class="hint">Commit any time &mdash; even on clue one. Spent actions cost score and Acumen.</span>
+    </div>
+  </section>
+
+  <!-- LOCK-IN -->
+  <section class="screen" id="screen-lockin">
+    <div class="panel-h">Commit your call</div>
+    <div class="panel-sub">Two steps, the way Step 1 tests it: name the disease, then the mechanism.</div>
+    <div class="section-tag"><span class="num">1</span> <span id="dxPrompt">Most likely diagnosis</span></div>
+    <div id="dxOptions"></div>
+    <div class="section-tag"><span class="num">2</span> <span id="mxPrompt">Underlying mechanism</span></div>
+    <div id="mxOptions"></div>
+    <div class="section-tag"><span class="num">3</span> Confidence bet</div>
+    <div class="conf-box">
+      <div class="conf-row">
+        <span class="conf-val" id="confVal">75%</span>
+        <span class="conf-word" id="confWord">Fairly sure</span>
+      </div>
+      <input type="range" id="confSlider" min="50" max="100" value="75" step="5" />
+      <p class="conf-note">Higher confidence multiplies a correct score &mdash; a confident miss
+        costs more shift vitals. Calibration is graded separately.</p>
+    </div>
+    <div class="case-actions">
+      <button class="btn btn-primary" id="commitBtn" onclick="resolve()" disabled>Commit &amp; lock in</button>
+      <button class="btn btn-ghost" onclick="go('case')">&larr; Back to workup</button>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section class="screen" id="screen-result">
+    <div class="card-box" id="resultCard"></div>
+    <div style="text-align:center;margin-top:16px;">
+      <button class="btn btn-primary" id="nextBtn" onclick="nextCase()">Next case &rarr;</button>
+    </div>
+  </section>
+
+  <!-- SUMMARY -->
+  <section class="screen" id="screen-summary">
+    <div class="card-box" id="summaryCard"></div>
+    <div style="text-align:center;margin-top:16px;">
+      <button class="btn btn-ghost" onclick="restart()">Replay shift</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ============================================================
+   IMAGE STORAGE  —  two ways to supply illustrations.
+
+   OPTION A · Plain host (GitHub + jsDelivr, Cloudinary, etc.)
+     Set IMAGE_BASE to the folder URL. Each file must be named
+     exactly <image_slot>.webp  e.g. smear_cml_full_maturation.webp
+     Leave IMAGE_MAP empty in this case.
+
+   OPTION B · Wix Media Manager
+     Wix renames every upload to a random hash, so paths are not
+     predictable. Instead, paste each image's URL into IMAGE_MAP
+     below, keyed by its slot. You can paste EITHER form:
+       - the wix:image:// URI  (e.g. wix:image://v1/ab5f41_xxx~mv2.png/...)
+       - the static URL        (https://static.wixstatic.com/media/ab5f41_xxx~mv2.png)
+     The game converts wix:image:// URIs automatically.
+
+   Any slot left blank simply shows a placeholder plate, so you
+   can fill these in over time. IMAGE_MAP wins over IMAGE_BASE.
+   ============================================================ */
+const IMAGE_BASE = ""; // Option A, e.g. "https://cdn.jsdelivr.net/gh/USER/REPO/images/"
+
+const IMAGE_MAP = {   // populated from LockInImages (Wix Media URIs)
+  // Case 1 — Chronic myeloid leukemia
+  "exam_cml_splenomegaly": "wix:image://v1/ab5f41_8b54689f473543c682f76a01231f2ffc~mv2.webp/exam_cml_splenomegaly.webp#originWidth=2048&originHeight=2048",
+  "smear_cml_full_maturation": "wix:image://v1/ab5f41_ac3a4c6e07794cc59ae24702c322da7f~mv2.webp/smear_cml_full_maturation.webp#originWidth=2048&originHeight=2048",
+  "labs_cml_low_lap": "wix:image://v1/ab5f41_d108e7ea04364bb78d8579050d0d2d91~mv2.webp/labs_cml_low_lap.webp#originWidth=2048&originHeight=2048",
+  "karyo_t9_22": "wix:image://v1/ab5f41_546e6ce7552d47cca355572819eeaa29~mv2.webp/karyo_t9_22.webp#originWidth=2048&originHeight=2048",
+  "marrow_granulocytic_hyperplasia": "wix:image://v1/ab5f41_e323f9ea95f34aceb38fd195b4691ec2~mv2.webp/marrow_granulocytic_hyperplasia.webp#originWidth=2048&originHeight=2048",
+  // Case 2 — Acute promyelocytic leukemia
+  "exam_apl_bleeding": "wix:image://v1/ab5f41_e4d0a78a00f34c709143ba3ebf40a4f7~mv2.webp/exam_apl_bleeding.webp#originWidth=2048&originHeight=2048",
+  "smear_apl_faggot_cells": "wix:image://v1/ab5f41_b43bd6d1c002481fafd84a139b66e313~mv2.webp/smear_apl_faggot_cells.webp#originWidth=2048&originHeight=2048",
+  "labs_apl_dic": "wix:image://v1/ab5f41_b72cb2367eaa4731ad0309d953a4e3f9~mv2.webp/labs_apl_dic.webp#originWidth=2048&originHeight=2048",
+  "karyo_t15_17": "wix:image://v1/ab5f41_f44f84ef8c144845b9464947d0ebb1df~mv2.webp/karyo_t15_17.webp#originWidth=2048&originHeight=2048",
+  "marrow_apl_promyelocytes": "wix:image://v1/ab5f41_4918186fe8254dbaa948c8baefe85f51~mv2.webp/marrow_apl_promyelocytes.webp#originWidth=2048&originHeight=2048",
+  // Case 3 — Hereditary spherocytosis
+  "exam_hs_jaundice": "wix:image://v1/ab5f41_a80f515a46a040a284b5bdde970bf768~mv2.webp/exam_hs_jaundice.webp#originWidth=2048&originHeight=2048",
+  "smear_hs_spherocytes": "wix:image://v1/ab5f41_ef4796e872f24cf0b7002cf8e97f36d1~mv2.webp/smear_hs_spherocytes.webp#originWidth=2048&originHeight=2048",
+  "labs_hs_mchc_coombs": "wix:image://v1/ab5f41_e4fdb6a6a8a74edcb0e1a3ddc006f799~mv2.webp/labs_hs_mchc_coombs.webp#originWidth=2048&originHeight=2048",
+  "labs_hs_ema_binding": "wix:image://v1/ab5f41_91da5a338ed04e24b8cf4cd126b9e944~mv2.webp/labs_hs_ema_binding.webp#originWidth=2048&originHeight=2048",
+  // Case 4 — G6PD deficiency
+  "exam_g6pd_dark_urine": "wix:image://v1/ab5f41_31db5cbedc4b4ff39529760ad1ba0e23~mv2.webp/exam_g6pd_dark_urine.webp#originWidth=2048&originHeight=2048",
+  "smear_g6pd_bite_heinz": "wix:image://v1/ab5f41_f4c7c4bdf0294f8b8f404ed5f659ad10~mv2.webp/smear_g6pd_bite_heinz.webp#originWidth=2048&originHeight=2048",
+  "labs_g6pd_hemolysis": "wix:image://v1/ab5f41_308e3204ec9943e08e0891ba38aa594b~mv2.webp/labs_g6pd_hemolysis.webp#originWidth=2048&originHeight=2048",
+  "labs_g6pd_enzyme": "wix:image://v1/ab5f41_6bb81692f84045cb80ea410433657cc3~mv2.webp/labs_g6pd_enzyme.webp#originWidth=2048&originHeight=2048",
+  // Case 5 — Chronic lymphocytic leukemia
+  "exam_cll_lymphadenopathy": "wix:image://v1/ab5f41_8e4f1e4ac0d14fd5b360b23b1342e24c~mv2.webp/exam_cll_lymphadenopathy.webp#originWidth=2048&originHeight=2048",
+  "smear_cll_smudge_cells": "wix:image://v1/ab5f41_d498602dc91d448390f9181dc2964cf1~mv2.webp/smear_cll_smudge_cells.webp#originWidth=2048&originHeight=2048",
+  "labs_cll_flow": "wix:image://v1/ab5f41_79b5712f4e7549b28e16d0d7b6d95f74~mv2.webp/labs_cll_flow.webp#originWidth=2048&originHeight=2048",
+  "labs_cll_lymphocytosis": "wix:image://v1/ab5f41_34ebface46ab4447b1e0eb958f3105ec~mv2.webp/labs_cll_lymphocytosis.webp#originWidth=2048&originHeight=2048",
+  "marrow_cll_infiltration": "wix:image://v1/ab5f41_131139c47a2a402e8d07b80cc675f7dc~mv2.webp/marrow_cll_infiltration.webp#originWidth=2048&originHeight=2048",
+  // Case 6 — Multiple myeloma
+  "exam_mm_bone_pain": "wix:image://v1/ab5f41_d1ec6c872f304c99a97fe2f559975e4f~mv2.webp/exam_mm_bone_pain.webp#originWidth=2048&originHeight=2048",
+  "smear_mm_rouleaux": "wix:image://v1/ab5f41_9d97d98d767f41eea953d6456600a266~mv2.webp/smear_mm_rouleaux.webp#originWidth=2048&originHeight=2048",
+  "labs_mm_mspike": "wix:image://v1/ab5f41_3ca67734ab4e42488236fb7818f676f5~mv2.webp/labs_mm_mspike.webp#originWidth=2048&originHeight=2048",
+  "imaging_mm_lytic_lesions": "wix:image://v1/ab5f41_434a419914bd4654b7bba1abf5abcb57~mv2.webp/imaging_mm_lytic_lesions.webp#originWidth=2048&originHeight=2048",
+  "marrow_mm_plasma_cells": "wix:image://v1/ab5f41_d2aa045711db42839e4d058bdabb4932~mv2.webp/marrow_mm_plasma_cells.webp#originWidth=2048&originHeight=2048",
+  // Case 7 — Hodgkin lymphoma
+  "exam_hodgkin_neck_mass": "wix:image://v1/ab5f41_a004bff4b89a4a398d5b1dfb499627a9~mv2.webp/exam_hodgkin_neck_mass.webp#originWidth=2048&originHeight=2048",
+  "histo_hodgkin_reed_sternberg": "wix:image://v1/ab5f41_4a5afda95f0745d9affd2832dd4fbc39~mv2.webp/histo_hodgkin_reed_sternberg.webp#originWidth=2048&originHeight=2048",
+  "histo_hodgkin_cd15_cd30": "wix:image://v1/ab5f41_96d819296ab8442d9010ea498b77e639~mv2.webp/histo_hodgkin_cd15_cd30.webp#originWidth=2048&originHeight=2048",
+  "labs_hodgkin_eosinophilia": "wix:image://v1/ab5f41_176fcaec703246289fda24a3cca2e4f3~mv2.webp/labs_hodgkin_eosinophilia.webp#originWidth=2048&originHeight=2048",
+  "imaging_hodgkin_mediastinal": "wix:image://v1/ab5f41_8100a00502d64d1297f22dd05e154ea5~mv2.webp/imaging_hodgkin_mediastinal.webp#originWidth=2048&originHeight=2048",
+  // Case 8 — Immune thrombocytopenic purpura
+  "exam_itp_petechiae": "wix:image://v1/ab5f41_8f60c1dadabe4620b65cbc59c63b913e~mv2.webp/exam_itp_petechiae.webp#originWidth=2048&originHeight=2048",
+  "smear_itp_low_platelets": "wix:image://v1/ab5f41_c6d1c2cf14124f0f8d927d7584830c3a~mv2.webp/smear_itp_low_platelets.webp#originWidth=2048&originHeight=2048",
+  "labs_itp_isolated_thrombocytopenia": "wix:image://v1/ab5f41_57df307174ff4ec8aba1434447f47587~mv2.webp/labs_itp_isolated_thrombocytopenia.webp#originWidth=2048&originHeight=2048",
+  "marrow_itp_megakaryocytes": "wix:image://v1/ab5f41_7fddeca4adae401ab8d89c7bd6fc0978~mv2.webp/marrow_itp_megakaryocytes.webp#originWidth=2048&originHeight=2048",
+  // Case 9 — Thrombotic thrombocytopenic purpura
+  "exam_ttp_neuro": "wix:image://v1/ab5f41_d1f6bdc82cee483da702df14c775f991~mv2.webp/exam_ttp_neuro.webp#originWidth=2048&originHeight=2048",
+  "smear_ttp_schistocytes": "wix:image://v1/ab5f41_0f05ac21b98c4527ad8a33f31c94fed3~mv2.webp/smear_ttp_schistocytes.webp#originWidth=2048&originHeight=2048",
+  "labs_ttp_maha": "wix:image://v1/ab5f41_c7c97322f87c4f589f2dd6aab188d449~mv2.webp/labs_ttp_maha.webp#originWidth=2048&originHeight=2048",
+  "labs_ttp_adamts13": "wix:image://v1/ab5f41_c1fcafa25043452f8c01470935cd2d76~mv2.webp/labs_ttp_adamts13.webp#originWidth=2048&originHeight=2048",
+  "exam_ttp_renal": "wix:image://v1/ab5f41_50150013932441d5bbd05ea06807d6ad~mv2.webp/exam_ttp_renal.webp#originWidth=2048&originHeight=2048",
+  // Case 10 — Beta-thalassemia major
+  "exam_bthal_facies": "wix:image://v1/ab5f41_4f2f43fce0b9437fac270e6c87b2ce73~mv2.webp/exam_bthal_facies.webp#originWidth=2048&originHeight=2048",
+  "smear_bthal_target_cells": "wix:image://v1/ab5f41_2d6f5b99ad0c4a39bff2b987b2372535~mv2.webp/smear_bthal_target_cells.webp#originWidth=2048&originHeight=2048",
+  "labs_bthal_electrophoresis": "wix:image://v1/ab5f41_496e5c20a00a4d5f963f4f013fa59c0f~mv2.webp/labs_bthal_electrophoresis.webp#originWidth=2048&originHeight=2048",
+  "imaging_bthal_crewcut": "wix:image://v1/ab5f41_183b334d52dc43a3b64acadab8671628~mv2.webp/imaging_bthal_crewcut.webp#originWidth=2048&originHeight=2048",
+  "labs_bthal_iron_overload": "wix:image://v1/ab5f41_b66d296739924d7eb70916ad8e32b5b4~mv2.webp/labs_bthal_iron_overload.webp#originWidth=2048&originHeight=2048",
+  // Reference / disease-atlas images (shared across cases)
+  "ref_all": "wix:image://v1/ab5f41_ac3ab17fe8b442d7b2f85c4387d4a6ec~mv2.webp/ref_all.webp#originWidth=2048&originHeight=2048",
+  "ref_aml": "wix:image://v1/ab5f41_45114dba982b4ca2aa11286e513b5a4c~mv2.webp/ref_aml.webp#originWidth=2048&originHeight=2048",
+  "ref_apl": "wix:image://v1/ab5f41_6268ceb5d4404403aa47289def191b1b~mv2.webp/ref_apl.webp#originWidth=2048&originHeight=2048",
+  "ref_aplastic": "wix:image://v1/ab5f41_2248891f679a472fabf1f241e97ae994~mv2.webp/ref_aplastic.webp#originWidth=2048&originHeight=2048",
+  "ref_athal": "wix:image://v1/ab5f41_034b5841d9c248dba2a76dcb3ba4450f~mv2.webp/ref_athal.webp#originWidth=2048&originHeight=2048",
+  "ref_bone_mets": "wix:image://v1/ab5f41_742f64b14da3444b9de74b4825a0acfd~mv2.webp/ref_bone_mets.webp#originWidth=2048&originHeight=2048",
+  "ref_bthal": "wix:image://v1/ab5f41_7dc9d88d964d4c289d046cc015a478fb~mv2.webp/ref_bthal.webp#originWidth=2048&originHeight=2048",
+  "ref_cll": "wix:image://v1/ab5f41_e4f44bb1ec764166adea5e714560f1d9~mv2.webp/ref_cll.webp#originWidth=2048&originHeight=2048",
+  "ref_cml": "wix:image://v1/ab5f41_9550f6256d594775a6fc7c9ffd4a7e30~mv2.webp/ref_cml.webp#originWidth=2048&originHeight=2048",
+  "ref_dic": "wix:image://v1/ab5f41_43d36c50419e42f693b52d31e40edcec~mv2.webp/ref_dic.webp#originWidth=2048&originHeight=2048",
+  "ref_dlbcl": "wix:image://v1/ab5f41_7cc38aa951d1479fbe65384b3ca835e4~mv2.webp/ref_dlbcl.webp#originWidth=2048&originHeight=2048",
+  "ref_evans": "wix:image://v1/ab5f41_0bf10ab847df443ebe902928ec77f269~mv2.webp/ref_evans.webp#originWidth=2048&originHeight=2048",
+  "ref_g6pd": "wix:image://v1/ab5f41_4f7e8794591d4601b0bd1c92ffcde464~mv2.webp/ref_g6pd.webp#originWidth=2048&originHeight=2048",
+  "ref_hodgkin": "wix:image://v1/ab5f41_591a74ad32604affb559a6fa398cdb80~mv2.webp/ref_hodgkin.webp#originWidth=2048&originHeight=2048",
+  "ref_hs": "wix:image://v1/ab5f41_52a32e41cff54ca9b718a65cb6333289~mv2.webp/ref_hs.webp#originWidth=2048&originHeight=2048",
+  "ref_hus": "wix:image://v1/ab5f41_405a1e5944214e96aaceb4ee84374a10~mv2.webp/ref_hus.webp#originWidth=2048&originHeight=2048",
+  "ref_hyperpara": "wix:image://v1/ab5f41_8e2f92ec52714dfdab4d45f8ee848c6b~mv2.webp/ref_hyperpara.webp#originWidth=2048&originHeight=2048",
+  "ref_ida": "wix:image://v1/ab5f41_eadcaa0c3f974d63817963a8c194df4a~mv2.webp/ref_ida.webp#originWidth=2048&originHeight=2048",
+  "ref_itp": "wix:image://v1/ab5f41_1dd22bd5eace42fbbaa2dfcdc3e4c645~mv2.webp/ref_itp.webp#originWidth=2048&originHeight=2048",
+  "ref_leukemoid": "wix:image://v1/ab5f41_195ac7dfaa574ddb89eaeec39bed95f4~mv2.webp/ref_leukemoid.webp#originWidth=2048&originHeight=2048",
+  "ref_mantle": "wix:image://v1/ab5f41_70479ae3476342f48a09a8b8310ef7fe~mv2.webp/ref_mantle.webp#originWidth=2048&originHeight=2048",
+  "ref_mgus": "wix:image://v1/ab5f41_1514cea633c049b1b80ced83a3ba67fa~mv2.webp/ref_mgus.webp#originWidth=2048&originHeight=2048",
+  "ref_mm": "wix:image://v1/ab5f41_c36a288dee2d450891689cf029c2bdcf~mv2.webp/ref_mm.webp#originWidth=2048&originHeight=2048",
+  "ref_mono": "wix:image://v1/ab5f41_1ebb431d2380484ca36818f8675ba6c9~mv2.webp/ref_mono.webp#originWidth=2048&originHeight=2048",
+  "ref_myelofibrosis": "wix:image://v1/ab5f41_aabdf0a157a449d78367bddfda606fd7~mv2.webp/ref_myelofibrosis.webp#originWidth=2048&originHeight=2048",
+  "ref_pnh": "wix:image://v1/ab5f41_82937f5d953d4ff2b79bdda187af66cd~mv2.webp/ref_pnh.webp#originWidth=2048&originHeight=2048",
+  "ref_sarcoid": "wix:image://v1/ab5f41_8b6a6ea93a6343c69d3dafd881ce870c~mv2.webp/ref_sarcoid.webp#originWidth=2048&originHeight=2048",
+  "ref_sickle": "wix:image://v1/ab5f41_98006cc875034dc990132ba922e3854c~mv2.webp/ref_sickle.webp#originWidth=2048&originHeight=2048",
+  "ref_sideroblastic": "wix:image://v1/ab5f41_d8eb76e476cf41ba9e1662f28efb149a~mv2.webp/ref_sideroblastic.webp#originWidth=2048&originHeight=2048",
+  "ref_tb_lymph": "wix:image://v1/ab5f41_a0e6938e19a8437eb545cfafaf746fe0~mv2.webp/ref_tb_lymph.webp#originWidth=2048&originHeight=2048",
+  "ref_ttp": "wix:image://v1/ab5f41_19bb5103cb044915a78c261776936ca1~mv2.webp/ref_ttp.webp#originWidth=2048&originHeight=2048",
+  "ref_waldenstrom": "wix:image://v1/ab5f41_edb0dafc87e34ba19f03e42f8f1bd123~mv2.webp/ref_waldenstrom.webp#originWidth=2048&originHeight=2048",
+  "ref_warm_aiha": "wix:image://v1/ab5f41_4fb272c35de043b28813b83597c8f4f1~mv2.webp/ref_warm_aiha.webp#originWidth=2048&originHeight=2048"
+};
+
+/* Resolve a slot (or a raw wix:/http value) to a loadable URL. */
+function resolveImg(s){
+  if(!s) return null;
+  let v = s;
+  if(v.indexOf("wix:image://")!==0 && v.indexOf("http")!==0){
+    v = (IMAGE_MAP[s] && IMAGE_MAP[s].trim())
+        ? IMAGE_MAP[s].trim()
+        : (IMAGE_BASE ? IMAGE_BASE + s + ".webp" : "");
+  }
+  if(!v) return null;
+  if(v.indexOf("wix:image://v1/")===0){
+    const mediaId = v.slice("wix:image://v1/".length).split("/")[0].split("#")[0];
+    return mediaId ? "https://static.wixstatic.com/media/" + mediaId : null;
+  }
+  return v;
+}
+
+/* CMS hook: if Wix injects window.LOCKIN_CASES, it overrides the
+   embedded array below — no code change needed.                */
+
+const ICONS = {
+  smear:'<svg viewBox="0 0 64 64" fill="none" stroke="#45b4c8" stroke-width="2.3"><circle cx="20" cy="22" r="9"/><circle cx="20" cy="22" r="3.4" fill="#e0a458" stroke="none"/><circle cx="43" cy="34" r="7.5"/><circle cx="43" cy="34" r="2.8" fill="#e0a458" stroke="none"/><circle cx="28" cy="46" r="6"/><circle cx="48" cy="16" r="4.5"/></svg>',
+  labs:'<svg viewBox="0 0 64 64" fill="none" stroke="#45b4c8" stroke-width="2.3"><path d="M26 8v18L14 48a4 4 0 0 0 3.6 6h28.8A4 4 0 0 0 50 48L38 26V8"/><path d="M22 8h20" stroke-linecap="round"/><path d="M21 40h22" stroke="#e0a458"/></svg>',
+  karyo:'<svg viewBox="0 0 64 64" fill="none" stroke="#45b4c8" stroke-width="2.6" stroke-linecap="round"><path d="M22 12c6 8-6 16 0 24 6 8-6 12 0 16"/><path d="M30 12c-6 8 6 16 0 24-6 8 6 12 0 16"/><path d="M40 18c5 6-5 12 0 18 5 6-5 9 0 14" stroke="#e0a458"/><path d="M47 18c-5 6 5 12 0 18-5 6 5 9 0 14" stroke="#e0a458"/></svg>',
+  marrow:'<svg viewBox="0 0 64 64" fill="none" stroke="#45b4c8" stroke-width="2.2"><circle cx="20" cy="20" r="6"/><circle cx="34" cy="16" r="5"/><circle cx="46" cy="24" r="6"/><circle cx="26" cy="32" r="6"/><circle cx="40" cy="36" r="5"/><circle cx="18" cy="44" r="5"/><circle cx="32" cy="46" r="6"/><circle cx="46" cy="46" r="5"/></svg>',
+  imaging:'<svg viewBox="0 0 64 64" fill="none" stroke="#45b4c8" stroke-width="2.3"><rect x="10" y="14" width="44" height="36" rx="4"/><path d="M30 22c-7 1-11 7-10 14 8 3 16-1 18-9 1-4-3-6-8-5z" fill="#e0a458" stroke="none"/><path d="M10 30h44" stroke-dasharray="3 3"/></svg>',
+  exam:'<svg viewBox="0 0 64 64" fill="none" stroke="#45b4c8" stroke-width="2.3"><circle cx="32" cy="20" r="9"/><path d="M14 52c0-11 8-18 18-18s18 7 18 18" stroke-linecap="round"/></svg>',
+  histo:'<svg viewBox="0 0 64 64" fill="none" stroke="#45b4c8" stroke-width="2.2"><rect x="10" y="12" width="44" height="40" rx="4"/><circle cx="22" cy="26" r="4.5"/><circle cx="38" cy="22" r="4"/><circle cx="44" cy="38" r="5"/><circle cx="26" cy="40" r="4" stroke="#e0a458"/><circle cx="34" cy="33" r="3.5"/></svg>',
+  gross:'<svg viewBox="0 0 64 64" fill="none" stroke="#45b4c8" stroke-width="2.4"><path d="M24 14c-9 2-14 11-11 21 3 11 16 17 26 12 9-5 11-17 5-26-5-8-12-9-20-7z"/><path d="M30 24c-4 3-5 9-2 13" stroke="#e0a458"/></svg>',
+  atlas:'<svg viewBox="0 0 64 64" fill="none" stroke="#45b4c8" stroke-width="2.3"><path d="M14 14h16c4 0 6 2 6 6v30c0-3-2-5-6-5H14z"/><path d="M50 14H34c-4 0-6 2-6 6v30c0-3 2-5 6-5h16z" stroke="#e0a458"/></svg>',
+  trophy:'<svg viewBox="0 0 64 64" fill="none" stroke="#e0a458" stroke-width="2.6" stroke-linecap="round"><path d="M20 14h24v10c0 9-5 15-12 15s-12-6-12-15z"/><path d="M20 18h-7c0 8 4 11 9 12M44 18h7c0 8-4 11-9 12"/><path d="M32 39v8M24 54h16M26 54l2-7h8l2 7"/></svg>'
+};
+
+/* ============================================================
+   CASES  —  Daily Shift: Hematology  (10 cases)
+   ============================================================ */
+const EMBEDDED_CASES = [
+{
+  case_id:"s1-heme-cml-001", system:"Hematology & Oncology", discipline:"Pathology",
+  difficulty:2, clue_budget:4,
+  stem:{presenting_complaint:"A 52-year-old man reports three months of fatigue, early satiety after small meals, and drenching night sweats."},
+  free_clue:{clue_id:"free",type:"Initial presentation",icon:"exam",image_slot:"exam_cml_splenomegaly",
+    finding:"Pallor on inspection; a firm, non-tender mass extends well below the left costal margin."},
+  clues:[
+    {clue_id:"c1",type:"Peripheral blood smear",icon:"smear",image_slot:"smear_cml_full_maturation",
+      finding:"Marked leukocytosis spanning every stage of granulocyte maturation, with basophilia; blasts are scarce.",is_discriminator:false},
+    {clue_id:"c2",type:"Laboratory panel",icon:"labs",image_slot:"labs_cml_low_lap",
+      finding:"WBC 184,000/uL. The leukocyte alkaline phosphatase (LAP) score is markedly low.",is_discriminator:true},
+    {clue_id:"c3",type:"Cytogenetics / FISH",icon:"karyo",image_slot:"karyo_t9_22",
+      finding:"FISH detects a reciprocal translocation t(9;22)(q34;q11).",is_discriminator:true},
+    {clue_id:"c4",type:"Bone marrow aspirate",icon:"marrow",image_slot:"marrow_granulocytic_hyperplasia",
+      finding:"Strikingly hypercellular marrow with granulocytic hyperplasia and a raised myeloid-to-erythroid ratio.",is_discriminator:false}
+  ],
+  diagnosis:{prompt:"Most likely diagnosis",lookalike_id:"dx2",options:[
+    {id:"dx0",text:"Chronic myeloid leukemia",correct:true,teaching_nudge:"",reference_image_slot:"ref_cml"},
+    {id:"dx1",text:"Acute myeloid leukemia",correct:false,reference_image_slot:"ref_aml",
+      teaching_nudge:"AML would show over 20% blasts; here blasts are scarce and the smear shows full maturation, a chronic picture."},
+    {id:"dx2",text:"Leukemoid reaction",correct:false,reference_image_slot:"ref_leukemoid",
+      teaching_nudge:"A leukemoid reaction is reactive and runs a HIGH LAP score; the low LAP and t(9;22) point to a clonal disease."},
+    {id:"dx3",text:"Primary myelofibrosis",correct:false,reference_image_slot:"ref_myelofibrosis",
+      teaching_nudge:"Myelofibrosis gives a dry tap with teardrop cells and marrow fibrosis, not a granulocyte-packed hypercellular marrow."},
+    {id:"dx4",text:"Chronic lymphocytic leukemia",correct:false,reference_image_slot:"ref_cll",
+      teaching_nudge:"CLL is a disorder of mature B lymphocytes with smudge cells, not a granulocytic proliferation."}
+  ]},
+  mechanism:{prompt:"Underlying mechanism",options:[
+    {id:"mx0",text:"BCR-ABL1 fusion gene producing a constitutively active tyrosine kinase",correct:true,teaching_nudge:""},
+    {id:"mx1",text:"JAK2 V617F mutation causing cytokine-independent JAK-STAT signaling",correct:false,
+      teaching_nudge:"JAK2 V617F drives polycythemia vera and other myeloproliferative neoplasms; CML is defined by BCR-ABL1."},
+    {id:"mx2",text:"t(15;17) PML-RARA fusion blocking myeloid maturation",correct:false,
+      teaching_nudge:"t(15;17) defines acute promyelocytic leukemia, with a maturation block rather than full maturation."},
+    {id:"mx3",text:"A reactive cytokine surge driving a benign granulocytosis",correct:false,
+      teaching_nudge:"That describes a leukemoid reaction; the t(9;22) translocation confirms a clonal neoplasm."},
+    {id:"mx4",text:"Clonal expansion of mature CD5-positive B lymphocytes",correct:false,
+      teaching_nudge:"That is the mechanism of CLL, a lymphoid malignancy, not a myeloid one."}
+  ]},
+  teaching:{
+    discriminator_summary:"The deciding triad is a very high WBC with full granulocyte maturation, a LOW leukocyte alkaline phosphatase score, and the t(9;22) translocation. A low LAP separates CML from a leukemoid reaction, where LAP runs high.",
+    mechanism_summary:"The Philadelphia chromosome fuses BCR to ABL1, producing a tyrosine kinase that is permanently switched on and drives unchecked myeloid proliferation. That fact is also the treatment target.",
+    high_yield_pearl:"Low LAP + t(9;22) + massive splenomegaly = CML; treat by inhibiting the BCR-ABL tyrosine kinase with imatinib."}
+},
+{
+  case_id:"s1-heme-apl-002", system:"Hematology & Oncology", discipline:"Pathology",
+  difficulty:3, clue_budget:4,
+  stem:{presenting_complaint:"A 30-year-old woman reports one week of easy bruising, bleeding gums, and profound fatigue."},
+  free_clue:{clue_id:"free",type:"Initial presentation",icon:"exam",image_slot:"exam_apl_bleeding",
+    finding:"Scattered ecchymoses and petechiae over the limbs, with active oozing from the gingiva."},
+  clues:[
+    {clue_id:"c1",type:"Peripheral blood smear",icon:"smear",image_slot:"smear_apl_faggot_cells",
+      finding:"Numerous abnormal promyelocytes packed with azurophilic granules; some contain bundled Auer rods (faggot cells).",is_discriminator:true},
+    {clue_id:"c2",type:"Coagulation panel",icon:"labs",image_slot:"labs_apl_dic",
+      finding:"Prolonged PT and PTT, low fibrinogen, and a markedly elevated D-dimer.",is_discriminator:true},
+    {clue_id:"c3",type:"Cytogenetics / FISH",icon:"karyo",image_slot:"karyo_t15_17",
+      finding:"FISH detects a reciprocal translocation t(15;17)(q22;q12).",is_discriminator:true},
+    {clue_id:"c4",type:"Bone marrow aspirate",icon:"marrow",image_slot:"marrow_apl_promyelocytes",
+      finding:"Over 20% of marrow cells are hypergranular promyelocytes.",is_discriminator:false}
+  ],
+  diagnosis:{prompt:"Most likely diagnosis",lookalike_id:"dx4",options:[
+    {id:"dx0",text:"Acute promyelocytic leukemia",correct:true,teaching_nudge:"",reference_image_slot:"ref_apl"},
+    {id:"dx1",text:"Chronic myeloid leukemia",correct:false,reference_image_slot:"ref_cml",
+      teaching_nudge:"CML shows full granulocyte maturation and t(9;22); here the cells are arrested at the promyelocyte stage."},
+    {id:"dx2",text:"Immune thrombocytopenic purpura",correct:false,reference_image_slot:"ref_itp",
+      teaching_nudge:"ITP gives isolated thrombocytopenia with a normal smear, not abnormal promyelocytes and DIC."},
+    {id:"dx3",text:"Aplastic anemia",correct:false,reference_image_slot:"ref_aplastic",
+      teaching_nudge:"Aplastic anemia gives a hypocellular marrow with no abnormal cells, not a marrow packed with promyelocytes."},
+    {id:"dx4",text:"AML with minimal differentiation",correct:false,reference_image_slot:"ref_aml",
+      teaching_nudge:"That AML subtype shows undifferentiated blasts without the hypergranular promyelocytes and t(15;17) seen here."}
+  ]},
+  mechanism:{prompt:"Underlying mechanism",options:[
+    {id:"mx0",text:"t(15;17) PML-RARA fusion arresting cells at the promyelocyte stage",correct:true,teaching_nudge:""},
+    {id:"mx1",text:"BCR-ABL1 fusion producing a constitutively active tyrosine kinase",correct:false,
+      teaching_nudge:"BCR-ABL1 defines CML, which permits full maturation rather than a promyelocytic block."},
+    {id:"mx2",text:"Anti-GpIIb/IIIa autoantibodies destroying platelets",correct:false,
+      teaching_nudge:"That is the mechanism of ITP; it would not produce abnormal promyelocytes or DIC."},
+    {id:"mx3",text:"Autoimmune destruction of hematopoietic stem cells",correct:false,
+      teaching_nudge:"That underlies aplastic anemia, which gives an empty marrow, not a promyelocyte-packed one."},
+    {id:"mx4",text:"JAK2 V617F mutation driving myeloproliferation",correct:false,
+      teaching_nudge:"JAK2 V617F drives polycythemia vera and related neoplasms, not a t(15;17) leukemia."}
+  ]},
+  teaching:{
+    discriminator_summary:"Faggot cells with bundled Auer rods plus DIC plus t(15;17) define APL. The DIC and the promyelocytic morphology separate it from other AML subtypes and from CML.",
+    mechanism_summary:"The PML-RARA fusion blocks myeloid maturation at the promyelocyte stage. All-trans retinoic acid overrides the block and forces the cells to mature, which is why APL is uniquely treatable with a vitamin A derivative.",
+    high_yield_pearl:"APL is an emergency: faggot cells + DIC + t(15;17), treated with ATRA and arsenic trioxide."}
+},
+{
+  case_id:"s1-heme-hs-003", system:"Hematology & Oncology", discipline:"Pathology",
+  difficulty:2, clue_budget:3,
+  stem:{presenting_complaint:"A 19-year-old man has lifelong intermittent jaundice and new fatigue after a recent viral illness; a parent had gallstones young and a splenectomy."},
+  free_clue:{clue_id:"free",type:"Initial presentation",icon:"exam",image_slot:"exam_hs_jaundice",
+    finding:"Scleral icterus and a palpable spleen tip below the left costal margin."},
+  clues:[
+    {clue_id:"c1",type:"Peripheral blood smear",icon:"smear",image_slot:"smear_hs_spherocytes",
+      finding:"Numerous small, round, densely staining red cells that lack central pallor.",is_discriminator:true},
+    {clue_id:"c2",type:"Laboratory panel",icon:"labs",image_slot:"labs_hs_mchc_coombs",
+      finding:"Elevated MCHC, high reticulocyte count, raised indirect bilirubin, and a NEGATIVE direct Coombs test.",is_discriminator:true},
+    {clue_id:"c3",type:"Membrane study",icon:"labs",image_slot:"labs_hs_ema_binding",
+      finding:"Increased osmotic fragility and decreased eosin-5-maleimide (EMA) binding.",is_discriminator:true}
+  ],
+  diagnosis:{prompt:"Most likely diagnosis",lookalike_id:"dx1",options:[
+    {id:"dx0",text:"Hereditary spherocytosis",correct:true,teaching_nudge:"",reference_image_slot:"ref_hs"},
+    {id:"dx1",text:"Warm autoimmune hemolytic anemia",correct:false,reference_image_slot:"ref_warm_aiha",
+      teaching_nudge:"Warm AIHA also makes spherocytes, but its Coombs test is POSITIVE; the negative Coombs here rules it out."},
+    {id:"dx2",text:"G6PD deficiency",correct:false,reference_image_slot:"ref_g6pd",
+      teaching_nudge:"G6PD deficiency gives bite cells and Heinz bodies on an oxidant trigger, not lifelong spherocytes."},
+    {id:"dx3",text:"Sickle cell disease",correct:false,reference_image_slot:"ref_sickle",
+      teaching_nudge:"Sickle cell shows sickled cells and a positive sickle screen, with vaso-occlusive crises rather than spherocytes."},
+    {id:"dx4",text:"Iron deficiency anemia",correct:false,reference_image_slot:"ref_ida",
+      teaching_nudge:"Iron deficiency gives microcytic, hypochromic cells with LOW MCHC, the opposite of the raised MCHC here."}
+  ]},
+  mechanism:{prompt:"Underlying mechanism",options:[
+    {id:"mx0",text:"Defective membrane skeletal proteins (ankyrin, spectrin, band 3) causing membrane loss",correct:true,teaching_nudge:""},
+    {id:"mx1",text:"IgG autoantibodies coating the red cell membrane",correct:false,
+      teaching_nudge:"That is warm AIHA; it would give a positive Coombs test, which is negative here."},
+    {id:"mx2",text:"Reduced NADPH leaving glutathione unregenerated",correct:false,
+      teaching_nudge:"That is the G6PD mechanism, which produces oxidative Heinz-body hemolysis, not spherocytes."},
+    {id:"mx3",text:"A glutamate-to-valine substitution in beta-globin",correct:false,
+      teaching_nudge:"That point mutation causes sickle cell disease via hemoglobin polymerization."},
+    {id:"mx4",text:"Insufficient iron for heme synthesis",correct:false,
+      teaching_nudge:"Iron deficiency gives a microcytic hypochromic picture, not spherocytes with a high MCHC."}
+  ]},
+  teaching:{
+    discriminator_summary:"Spherocytes with a high MCHC and a NEGATIVE Coombs test point to hereditary spherocytosis. Warm AIHA also produces spherocytes but is Coombs positive, and that test is the key separator.",
+    mechanism_summary:"Defects in the vertical interactions of the membrane cytoskeleton let the cell shed membrane, becoming a sphere that the spleen traps and destroys. Splenectomy reduces hemolysis.",
+    high_yield_pearl:"Spherocytes + high MCHC + negative Coombs + increased osmotic fragility = hereditary spherocytosis."}
+},
+{
+  case_id:"s1-heme-g6pd-004", system:"Hematology & Oncology", discipline:"Pathology",
+  difficulty:2, clue_budget:3,
+  stem:{presenting_complaint:"A 24-year-old man of Mediterranean descent develops sudden fatigue and dark urine two days after starting a sulfa antibiotic."},
+  free_clue:{clue_id:"free",type:"Initial presentation",icon:"exam",image_slot:"exam_g6pd_dark_urine",
+    finding:"Jaundice and cola-colored urine; symptoms began abruptly after the new medication."},
+  clues:[
+    {clue_id:"c1",type:"Peripheral blood smear",icon:"smear",image_slot:"smear_g6pd_bite_heinz",
+      finding:"Bite cells are present, and a supravital stain reveals Heinz bodies within red cells.",is_discriminator:true},
+    {clue_id:"c2",type:"Laboratory panel",icon:"labs",image_slot:"labs_g6pd_hemolysis",
+      finding:"Falling hemoglobin, high LDH, raised indirect bilirubin, and low haptoglobin.",is_discriminator:false},
+    {clue_id:"c3",type:"Enzyme assay",icon:"labs",image_slot:"labs_g6pd_enzyme",
+      finding:"Red cell G6PD activity is low when measured several weeks after the acute episode.",is_discriminator:true}
+  ],
+  diagnosis:{prompt:"Most likely diagnosis",lookalike_id:"dx1",options:[
+    {id:"dx0",text:"G6PD deficiency",correct:true,teaching_nudge:"",reference_image_slot:"ref_g6pd"},
+    {id:"dx1",text:"Paroxysmal nocturnal hemoglobinuria",correct:false,reference_image_slot:"ref_pnh",
+      teaching_nudge:"PNH also gives episodic dark urine, but lacks bite cells and Heinz bodies and is driven by complement, not an oxidant trigger."},
+    {id:"dx2",text:"Hereditary spherocytosis",correct:false,reference_image_slot:"ref_hs",
+      teaching_nudge:"Hereditary spherocytosis gives spherocytes and a lifelong course, not an acute oxidant-triggered hemolysis."},
+    {id:"dx3",text:"Warm autoimmune hemolytic anemia",correct:false,reference_image_slot:"ref_warm_aiha",
+      teaching_nudge:"Warm AIHA gives spherocytes and a positive Coombs test, not bite cells after a drug exposure."},
+    {id:"dx4",text:"Sickle cell disease",correct:false,reference_image_slot:"ref_sickle",
+      teaching_nudge:"Sickle cell disease causes vaso-occlusive crises with sickled cells, not oxidant-triggered Heinz-body hemolysis."}
+  ]},
+  mechanism:{prompt:"Underlying mechanism",options:[
+    {id:"mx0",text:"Reduced NADPH from an impaired HMP shunt, leaving glutathione unregenerated",correct:true,teaching_nudge:""},
+    {id:"mx1",text:"Absent GPI anchor leaving cells vulnerable to complement lysis",correct:false,
+      teaching_nudge:"That mechanism underlies PNH; it is not triggered by oxidant drugs and does not give Heinz bodies."},
+    {id:"mx2",text:"Defective membrane skeletal proteins causing membrane loss",correct:false,
+      teaching_nudge:"That is hereditary spherocytosis, which produces spherocytes rather than bite cells."},
+    {id:"mx3",text:"IgG autoantibodies coating the red cell membrane",correct:false,
+      teaching_nudge:"That is warm AIHA; it would give a positive Coombs test."},
+    {id:"mx4",text:"Polymerization of hemoglobin S under deoxygenation",correct:false,
+      teaching_nudge:"That is the sickle cell mechanism, unrelated to oxidant stress."}
+  ]},
+  teaching:{
+    discriminator_summary:"An oxidant trigger (sulfa or antimalarial drugs, infection, fava beans) followed by bite cells and Heinz bodies points to G6PD deficiency. Measure enzyme activity weeks later, since young reticulocytes have higher G6PD and can mask the deficiency acutely.",
+    mechanism_summary:"G6PD is rate-limiting for NADPH production in the HMP shunt. Without NADPH, glutathione cannot be regenerated, so oxidative stress denatures hemoglobin into Heinz bodies that the spleen bites away.",
+    high_yield_pearl:"X-linked; oxidant trigger + bite cells + Heinz bodies = G6PD deficiency; assay enzyme after the episode."}
+},
+{
+  case_id:"s1-heme-cll-005", system:"Hematology & Oncology", discipline:"Pathology",
+  difficulty:2, clue_budget:4,
+  stem:{presenting_complaint:"A 68-year-old man is found to have a high lymphocyte count on routine bloodwork and has noticed painless neck swelling."},
+  free_clue:{clue_id:"free",type:"Initial presentation",icon:"exam",image_slot:"exam_cll_lymphadenopathy",
+    finding:"Non-tender, rubbery enlarged cervical and axillary lymph nodes; the patient feels well."},
+  clues:[
+    {clue_id:"c1",type:"Peripheral blood smear",icon:"smear",image_slot:"smear_cll_smudge_cells",
+      finding:"Numerous small, mature-appearing lymphocytes, with many fragile smudge cells.",is_discriminator:false},
+    {clue_id:"c2",type:"Flow cytometry",icon:"labs",image_slot:"labs_cll_flow",
+      finding:"A clonal B-cell population co-expressing CD5, CD19, and CD23.",is_discriminator:true},
+    {clue_id:"c3",type:"Laboratory panel",icon:"labs",image_slot:"labs_cll_lymphocytosis",
+      finding:"Sustained lymphocytosis; mild anemia with a positive direct Coombs test.",is_discriminator:false},
+    {clue_id:"c4",type:"Bone marrow aspirate",icon:"marrow",image_slot:"marrow_cll_infiltration",
+      finding:"Diffuse infiltration by small mature lymphocytes.",is_discriminator:false}
+  ],
+  diagnosis:{prompt:"Most likely diagnosis",lookalike_id:"dx3",options:[
+    {id:"dx0",text:"Chronic lymphocytic leukemia",correct:true,teaching_nudge:"",reference_image_slot:"ref_cll"},
+    {id:"dx1",text:"Chronic myeloid leukemia",correct:false,reference_image_slot:"ref_cml",
+      teaching_nudge:"CML is a granulocytic proliferation with t(9;22), not a clonal expansion of mature B lymphocytes."},
+    {id:"dx2",text:"Hodgkin lymphoma",correct:false,reference_image_slot:"ref_hodgkin",
+      teaching_nudge:"Hodgkin lymphoma is diagnosed on lymph node biopsy showing Reed-Sternberg cells, not by a clonal blood lymphocytosis."},
+    {id:"dx3",text:"Mantle cell lymphoma",correct:false,reference_image_slot:"ref_mantle",
+      teaching_nudge:"Mantle cell is also a CD5-positive B-cell tumor, but it is CD23 NEGATIVE and carries t(11;14); CD23 positivity here favors CLL."},
+    {id:"dx4",text:"Acute lymphoblastic leukemia",correct:false,reference_image_slot:"ref_all",
+      teaching_nudge:"ALL is a disease of immature TdT-positive lymphoblasts in children, not mature CD5/CD23-positive cells in an elderly patient."}
+  ]},
+  mechanism:{prompt:"Underlying mechanism",options:[
+    {id:"mx0",text:"Clonal proliferation of mature CD5-positive, CD23-positive B lymphocytes",correct:true,teaching_nudge:""},
+    {id:"mx1",text:"BCR-ABL1 fusion producing a constitutively active tyrosine kinase",correct:false,
+      teaching_nudge:"BCR-ABL1 defines CML, a myeloid disease, not a mature B-lymphocyte proliferation."},
+    {id:"mx2",text:"Clonal Reed-Sternberg cells in a reactive inflammatory background",correct:false,
+      teaching_nudge:"Reed-Sternberg cells define Hodgkin lymphoma, diagnosed on tissue, not on a blood lymphocytosis."},
+    {id:"mx3",text:"t(11;14) translocation overexpressing cyclin D1",correct:false,
+      teaching_nudge:"t(11;14) and cyclin D1 define mantle cell lymphoma, which is CD23 negative."},
+    {id:"mx4",text:"Maturation arrest of TdT-positive lymphoblasts",correct:false,
+      teaching_nudge:"That is acute lymphoblastic leukemia, a disease of immature cells, typically in children."}
+  ]},
+  teaching:{
+    discriminator_summary:"Smudge cells with a clonal CD5/CD19/CD23-positive B-cell population define CLL. Mantle cell lymphoma is the trap: it is also CD5 positive, but it is CD23 negative and carries t(11;14).",
+    mechanism_summary:"CLL is an accumulation of functionally incompetent mature B lymphocytes. Their slow buildup explains the indolent course, the lymphadenopathy, and the autoimmune hemolysis sometimes seen.",
+    high_yield_pearl:"Elderly patient + smudge cells + CD5/CD23-positive B cells = CLL; CD23 separates it from mantle cell."}
+},
+{
+  case_id:"s1-heme-mm-006", system:"Hematology & Oncology", discipline:"Pathology",
+  difficulty:2, clue_budget:4,
+  stem:{presenting_complaint:"A 64-year-old woman reports weeks of worsening back pain, fatigue, and several recent infections."},
+  free_clue:{clue_id:"free",type:"Initial presentation",icon:"exam",image_slot:"exam_mm_bone_pain",
+    finding:"Point tenderness over the lumbar vertebrae and conjunctival pallor."},
+  clues:[
+    {clue_id:"c1",type:"Peripheral blood smear",icon:"smear",image_slot:"smear_mm_rouleaux",
+      finding:"Normocytic anemia with red cells stacked in rouleaux formation.",is_discriminator:false},
+    {clue_id:"c2",type:"Laboratory panel",icon:"labs",image_slot:"labs_mm_mspike",
+      finding:"Hypercalcemia, raised creatinine, and a high total protein with a monoclonal spike on serum electrophoresis.",is_discriminator:true},
+    {clue_id:"c3",type:"Skeletal imaging",icon:"imaging",image_slot:"imaging_mm_lytic_lesions",
+      finding:"Multiple sharply marginated punched-out lytic lesions in the skull.",is_discriminator:true},
+    {clue_id:"c4",type:"Bone marrow aspirate",icon:"marrow",image_slot:"marrow_mm_plasma_cells",
+      finding:"Over 10% clonal plasma cells, some with eccentric nuclei and clock-face chromatin.",is_discriminator:true}
+  ],
+  diagnosis:{prompt:"Most likely diagnosis",lookalike_id:"dx1",options:[
+    {id:"dx0",text:"Multiple myeloma",correct:true,teaching_nudge:"",reference_image_slot:"ref_mm"},
+    {id:"dx1",text:"Monoclonal gammopathy of undetermined significance",correct:false,reference_image_slot:"ref_mgus",
+      teaching_nudge:"MGUS has an M-spike but no end-organ damage and under 10% marrow plasma cells; the CRAB features here exclude it."},
+    {id:"dx2",text:"Waldenstrom macroglobulinemia",correct:false,reference_image_slot:"ref_waldenstrom",
+      teaching_nudge:"Waldenstrom secretes IgM and causes hyperviscosity, but it does not produce lytic bone lesions."},
+    {id:"dx3",text:"Bone metastases from a solid tumor",correct:false,reference_image_slot:"ref_bone_mets",
+      teaching_nudge:"Metastatic disease can cause lytic lesions but would not produce a serum M-spike or clonal marrow plasma cells."},
+    {id:"dx4",text:"Primary hyperparathyroidism",correct:false,reference_image_slot:"ref_hyperpara",
+      teaching_nudge:"Hyperparathyroidism causes hypercalcemia but not an M-spike, rouleaux, or a plasma-cell marrow."}
+  ]},
+  mechanism:{prompt:"Underlying mechanism",options:[
+    {id:"mx0",text:"Clonal plasma cell proliferation secreting a monoclonal immunoglobulin",correct:true,teaching_nudge:""},
+    {id:"mx1",text:"A small asymptomatic plasma cell clone without end-organ damage",correct:false,
+      teaching_nudge:"That describes MGUS; the hypercalcemia, renal failure, anemia, and lytic lesions here mark overt myeloma."},
+    {id:"mx2",text:"Clonal lymphoplasmacytic cells secreting monoclonal IgM",correct:false,
+      teaching_nudge:"That is Waldenstrom macroglobulinemia, which causes hyperviscosity rather than lytic bone lesions."},
+    {id:"mx3",text:"Osteoclast activation by metastatic tumor cells",correct:false,
+      teaching_nudge:"Solid-tumor metastasis would not generate a monoclonal protein or a plasma-cell marrow."},
+    {id:"mx4",text:"Autonomous oversecretion of parathyroid hormone",correct:false,
+      teaching_nudge:"Excess PTH explains hypercalcemia alone, not the M-spike, rouleaux, and plasma-cell infiltration."}
+  ]},
+  teaching:{
+    discriminator_summary:"The CRAB tetrad of hyperCalcemia, Renal failure, Anemia, and Bone lesions, together with an M-spike and over 10% clonal marrow plasma cells, defines myeloma. MGUS is the look-alike: an M-spike with none of the CRAB damage.",
+    mechanism_summary:"A clonal plasma cell population pours out monoclonal immunoglobulin and activates osteoclasts, producing the lytic lesions, hypercalcemia, light-chain renal injury, and rouleaux.",
+    high_yield_pearl:"M-spike + CRAB + over 10% marrow plasma cells = multiple myeloma; punched-out lytic lesions and Bence-Jones light chains."}
+},
+{
+  case_id:"s1-heme-hodgkin-007", system:"Hematology & Oncology", discipline:"Pathology",
+  difficulty:2, clue_budget:4,
+  stem:{presenting_complaint:"A 24-year-old man has a painless neck mass for two months, drenching night sweats, fevers, and 6 kg of weight loss."},
+  free_clue:{clue_id:"free",type:"Initial presentation",icon:"exam",image_slot:"exam_hodgkin_neck_mass",
+    finding:"A firm, non-tender cervical lymph node; the patient notes the node aches after drinking alcohol."},
+  clues:[
+    {clue_id:"c1",type:"Lymph node biopsy",icon:"histo",image_slot:"histo_hodgkin_reed_sternberg",
+      finding:"Large binucleate cells with prominent owl-eye nucleoli set in a mixed inflammatory background.",is_discriminator:true},
+    {clue_id:"c2",type:"Immunohistochemistry",icon:"histo",image_slot:"histo_hodgkin_cd15_cd30",
+      finding:"The large atypical cells stain positive for CD15 and CD30.",is_discriminator:true},
+    {clue_id:"c3",type:"Laboratory panel",icon:"labs",image_slot:"labs_hodgkin_eosinophilia",
+      finding:"Mild peripheral eosinophilia and an elevated ESR.",is_discriminator:false},
+    {clue_id:"c4",type:"Staging imaging",icon:"imaging",image_slot:"imaging_hodgkin_mediastinal",
+      finding:"A mediastinal mass with disease spread to contiguous nodal groups.",is_discriminator:false}
+  ],
+  diagnosis:{prompt:"Most likely diagnosis",lookalike_id:"dx1",options:[
+    {id:"dx0",text:"Hodgkin lymphoma",correct:true,teaching_nudge:"",reference_image_slot:"ref_hodgkin"},
+    {id:"dx1",text:"Diffuse large B-cell lymphoma",correct:false,reference_image_slot:"ref_dlbcl",
+      teaching_nudge:"This non-Hodgkin lymphoma is a sheet of large B cells without Reed-Sternberg cells, and it spreads non-contiguously."},
+    {id:"dx2",text:"Infectious mononucleosis",correct:false,reference_image_slot:"ref_mono",
+      teaching_nudge:"Mononucleosis gives reactive atypical lymphocytes and a self-limited course, not CD15/CD30-positive Reed-Sternberg cells."},
+    {id:"dx3",text:"Tuberculous lymphadenitis",correct:false,reference_image_slot:"ref_tb_lymph",
+      teaching_nudge:"TB lymphadenitis shows caseating granulomas, not binucleate owl-eye cells."},
+    {id:"dx4",text:"Sarcoidosis",correct:false,reference_image_slot:"ref_sarcoid",
+      teaching_nudge:"Sarcoidosis gives non-caseating granulomas without Reed-Sternberg cells."}
+  ]},
+  mechanism:{prompt:"Underlying mechanism",options:[
+    {id:"mx0",text:"Clonal germinal-center B-cell-derived Reed-Sternberg cells, CD15 and CD30 positive",correct:true,teaching_nudge:""},
+    {id:"mx1",text:"Clonal proliferation of large mature B cells without Reed-Sternberg cells",correct:false,
+      teaching_nudge:"That describes diffuse large B-cell lymphoma, a non-Hodgkin lymphoma."},
+    {id:"mx2",text:"EBV-driven reactive expansion of T lymphocytes",correct:false,
+      teaching_nudge:"That underlies infectious mononucleosis, a reactive and self-limited process."},
+    {id:"mx3",text:"Granuloma formation in response to mycobacterial infection",correct:false,
+      teaching_nudge:"That produces caseating granulomas in tuberculous lymphadenitis, not Reed-Sternberg cells."},
+    {id:"mx4",text:"Non-caseating granuloma formation of unknown cause",correct:false,
+      teaching_nudge:"That is sarcoidosis; it lacks the malignant Reed-Sternberg cell."}
+  ]},
+  teaching:{
+    discriminator_summary:"Binucleate owl-eye Reed-Sternberg cells that stain for CD15 and CD30 define Hodgkin lymphoma. Contiguous nodal spread and alcohol-induced node pain in a young adult are classic, separating it from non-Hodgkin lymphoma.",
+    mechanism_summary:"The Reed-Sternberg cell is a crippled germinal-center B cell that recruits a large reactive infiltrate, so most of the node is inflammatory cells rather than tumor.",
+    high_yield_pearl:"Reed-Sternberg owl-eye cells, CD15 and CD30 positive, bimodal age, contiguous spread = Hodgkin lymphoma."}
+},
+{
+  case_id:"s1-heme-itp-008", system:"Hematology & Oncology", discipline:"Pathology",
+  difficulty:1, clue_budget:3,
+  stem:{presenting_complaint:"A 28-year-old woman reports two weeks of easy bruising and a pinpoint rash on her shins, with bleeding gums; she had a viral cold recently."},
+  free_clue:{clue_id:"free",type:"Initial presentation",icon:"exam",image_slot:"exam_itp_petechiae",
+    finding:"Petechiae over both shins; no lymphadenopathy and no splenomegaly."},
+  clues:[
+    {clue_id:"c1",type:"Peripheral blood smear",icon:"smear",image_slot:"smear_itp_low_platelets",
+      finding:"Markedly reduced platelets, the few present being large; red cells and white cells appear normal.",is_discriminator:true},
+    {clue_id:"c2",type:"Laboratory panel",icon:"labs",image_slot:"labs_itp_isolated_thrombocytopenia",
+      finding:"Isolated thrombocytopenia with a normal hemoglobin, normal white count, and normal PT and PTT.",is_discriminator:true},
+    {clue_id:"c3",type:"Bone marrow aspirate",icon:"marrow",image_slot:"marrow_itp_megakaryocytes",
+      finding:"Normal to increased numbers of megakaryocytes.",is_discriminator:true}
+  ],
+  diagnosis:{prompt:"Most likely diagnosis",lookalike_id:"dx1",options:[
+    {id:"dx0",text:"Immune thrombocytopenic purpura",correct:true,teaching_nudge:"",reference_image_slot:"ref_itp"},
+    {id:"dx1",text:"Thrombotic thrombocytopenic purpura",correct:false,reference_image_slot:"ref_ttp",
+      teaching_nudge:"TTP also lowers platelets but adds schistocytes and hemolytic anemia; this smear is otherwise normal."},
+    {id:"dx2",text:"Disseminated intravascular coagulation",correct:false,reference_image_slot:"ref_dic",
+      teaching_nudge:"DIC prolongs the PT and PTT and consumes fibrinogen; the coagulation studies here are normal."},
+    {id:"dx3",text:"Aplastic anemia",correct:false,reference_image_slot:"ref_aplastic",
+      teaching_nudge:"Aplastic anemia drops all three lineages with an empty marrow, not isolated thrombocytopenia with abundant megakaryocytes."},
+    {id:"dx4",text:"Acute leukemia",correct:false,reference_image_slot:"ref_aml",
+      teaching_nudge:"Leukemia would show blasts and abnormal counts in other lineages, not isolated thrombocytopenia."}
+  ]},
+  mechanism:{prompt:"Underlying mechanism",options:[
+    {id:"mx0",text:"Anti-GpIIb/IIIa autoantibodies driving splenic destruction of platelets",correct:true,teaching_nudge:""},
+    {id:"mx1",text:"ADAMTS13 deficiency producing platelet-rich microthrombi",correct:false,
+      teaching_nudge:"That is the TTP mechanism, which also causes a microangiopathic hemolytic anemia."},
+    {id:"mx2",text:"Systemic activation of coagulation consuming platelets and clotting factors",correct:false,
+      teaching_nudge:"That is DIC; it would prolong the PT and PTT, which are normal here."},
+    {id:"mx3",text:"Failure of all hematopoietic lineages in an empty marrow",correct:false,
+      teaching_nudge:"That is aplastic anemia, which gives pancytopenia and a hypocellular marrow."},
+    {id:"mx4",text:"Marrow replacement by malignant cells",correct:false,
+      teaching_nudge:"Marrow infiltration would disturb other lineages and show blasts, unlike this isolated picture."}
+  ]},
+  teaching:{
+    discriminator_summary:"Isolated thrombocytopenia with an otherwise normal smear, normal coagulation studies, and normal-to-increased marrow megakaryocytes defines ITP. TTP and DIC are the look-alikes, but both show an abnormal smear or abnormal coagulation.",
+    mechanism_summary:"Autoantibodies against the platelet GpIIb/IIIa receptor opsonize platelets for destruction by splenic macrophages, while the marrow ramps up megakaryocytes in compensation.",
+    high_yield_pearl:"Isolated low platelets, normal smear and coags, increased megakaryocytes = ITP (anti-GpIIb/IIIa antibodies)."}
+},
+{
+  case_id:"s1-heme-ttp-009", system:"Hematology & Oncology", discipline:"Pathology",
+  difficulty:3, clue_budget:4,
+  stem:{presenting_complaint:"A 41-year-old woman has several days of headache and fluctuating confusion, fatigue, bruising, and a low-grade fever."},
+  free_clue:{clue_id:"free",type:"Initial presentation",icon:"exam",image_slot:"exam_ttp_neuro",
+    finding:"Scattered petechiae, mild scleral icterus, and a waxing-and-waning level of alertness."},
+  clues:[
+    {clue_id:"c1",type:"Peripheral blood smear",icon:"smear",image_slot:"smear_ttp_schistocytes",
+      finding:"Fragmented red cells (schistocytes) are numerous, and platelets are sparse.",is_discriminator:true},
+    {clue_id:"c2",type:"Laboratory panel",icon:"labs",image_slot:"labs_ttp_maha",
+      finding:"Anemia with high LDH, low haptoglobin, raised indirect bilirubin, and thrombocytopenia; PT and PTT are NORMAL.",is_discriminator:true},
+    {clue_id:"c3",type:"Enzyme assay",icon:"labs",image_slot:"labs_ttp_adamts13",
+      finding:"ADAMTS13 activity is severely reduced.",is_discriminator:true},
+    {clue_id:"c4",type:"Organ assessment",icon:"exam",image_slot:"exam_ttp_renal",
+      finding:"Only mild renal impairment, with neurologic findings dominating the picture.",is_discriminator:false}
+  ],
+  diagnosis:{prompt:"Most likely diagnosis",lookalike_id:"dx1",options:[
+    {id:"dx0",text:"Thrombotic thrombocytopenic purpura",correct:true,teaching_nudge:"",reference_image_slot:"ref_ttp"},
+    {id:"dx1",text:"Hemolytic uremic syndrome",correct:false,reference_image_slot:"ref_hus",
+      teaching_nudge:"HUS is also a thrombotic microangiopathy, but it is renal-predominant and follows Shiga-toxin E. coli; TTP is neuro-predominant with low ADAMTS13."},
+    {id:"dx2",text:"Disseminated intravascular coagulation",correct:false,reference_image_slot:"ref_dic",
+      teaching_nudge:"DIC prolongs the PT and PTT and consumes fibrinogen; the normal coagulation studies here argue against it."},
+    {id:"dx3",text:"Immune thrombocytopenic purpura",correct:false,reference_image_slot:"ref_itp",
+      teaching_nudge:"ITP gives isolated thrombocytopenia with a normal smear, not schistocytes and hemolysis."},
+    {id:"dx4",text:"Evans syndrome",correct:false,reference_image_slot:"ref_evans",
+      teaching_nudge:"Evans syndrome combines autoimmune hemolysis and immune thrombocytopenia but lacks schistocytes and low ADAMTS13."}
+  ]},
+  mechanism:{prompt:"Underlying mechanism",options:[
+    {id:"mx0",text:"ADAMTS13 deficiency leaving ultra-large vWF multimers to form platelet microthrombi",correct:true,teaching_nudge:""},
+    {id:"mx1",text:"Shiga-like toxin causing endothelial injury",correct:false,
+      teaching_nudge:"That is the HUS mechanism, producing a renal-predominant microangiopathy after E. coli O157:H7."},
+    {id:"mx2",text:"Systemic activation of coagulation consuming clotting factors",correct:false,
+      teaching_nudge:"That is DIC, which would prolong the PT and PTT."},
+    {id:"mx3",text:"Anti-GpIIb/IIIa autoantibodies destroying platelets",correct:false,
+      teaching_nudge:"That is ITP; it does not fragment red cells into schistocytes."},
+    {id:"mx4",text:"Simultaneous autoimmune hemolysis and immune thrombocytopenia",correct:false,
+      teaching_nudge:"That is Evans syndrome, which does not involve ADAMTS13 or schistocyte-forming microthrombi."}
+  ]},
+  teaching:{
+    discriminator_summary:"A microangiopathic hemolytic anemia with schistocytes and thrombocytopenia, normal PT and PTT, and severely low ADAMTS13 defines TTP. HUS is the closest mimic but is renal-predominant and Shiga-toxin driven; DIC has abnormal coagulation studies.",
+    mechanism_summary:"Without ADAMTS13 to cleave them, ultra-large von Willebrand factor multimers persist and snag platelets into microthrombi that shear passing red cells and starve the brain of perfusion.",
+    high_yield_pearl:"Schistocytes + thrombocytopenia + normal coags + low ADAMTS13 = TTP; never give platelets."}
+},
+{
+  case_id:"s1-heme-bthal-010", system:"Hematology & Oncology", discipline:"Pathology",
+  difficulty:2, clue_budget:4,
+  stem:{presenting_complaint:"A 2-year-old child of Mediterranean descent has pallor, poor growth, and a distended abdomen; symptoms began in the second half of infancy."},
+  free_clue:{clue_id:"free",type:"Initial presentation",icon:"exam",image_slot:"exam_bthal_facies",
+    finding:"Marked pallor, frontal bossing of the skull, and hepatosplenomegaly."},
+  clues:[
+    {clue_id:"c1",type:"Peripheral blood smear",icon:"smear",image_slot:"smear_bthal_target_cells",
+      finding:"Severe microcytic, hypochromic anemia with target cells, anisopoikilocytosis, and nucleated red cells.",is_discriminator:true},
+    {clue_id:"c2",type:"Hemoglobin electrophoresis",icon:"labs",image_slot:"labs_bthal_electrophoresis",
+      finding:"Markedly elevated HbF and elevated HbA2, with little or no HbA.",is_discriminator:true},
+    {clue_id:"c3",type:"Skull imaging",icon:"imaging",image_slot:"imaging_bthal_crewcut",
+      finding:"A crew-cut, hair-on-end appearance of the skull from marrow expansion.",is_discriminator:false},
+    {clue_id:"c4",type:"Iron studies",icon:"labs",image_slot:"labs_bthal_iron_overload",
+      finding:"Ferritin and serum iron are elevated despite the anemia.",is_discriminator:false}
+  ],
+  diagnosis:{prompt:"Most likely diagnosis",lookalike_id:"dx2",options:[
+    {id:"dx0",text:"Beta-thalassemia major",correct:true,teaching_nudge:"",reference_image_slot:"ref_bthal"},
+    {id:"dx1",text:"Alpha-thalassemia",correct:false,reference_image_slot:"ref_athal",
+      teaching_nudge:"Alpha-thalassemia does not raise HbF or HbA2, since those hemoglobins also need alpha chains."},
+    {id:"dx2",text:"Iron deficiency anemia",correct:false,reference_image_slot:"ref_ida",
+      teaching_nudge:"Iron deficiency is also microcytic, but it shows LOW ferritin and normal-to-low HbA2; here iron is high and HbA2 is raised."},
+    {id:"dx3",text:"Sickle cell disease",correct:false,reference_image_slot:"ref_sickle",
+      teaching_nudge:"Sickle cell shows HbS on electrophoresis with sickled cells, not a microcytic picture with elevated HbA2."},
+    {id:"dx4",text:"Sideroblastic anemia",correct:false,reference_image_slot:"ref_sideroblastic",
+      teaching_nudge:"Sideroblastic anemia shows ringed sideroblasts on marrow iron stain and does not raise HbF and HbA2."}
+  ]},
+  mechanism:{prompt:"Underlying mechanism",options:[
+    {id:"mx0",text:"Absent or markedly reduced beta-globin synthesis with excess alpha chains precipitating",correct:true,teaching_nudge:""},
+    {id:"mx1",text:"Deletion of alpha-globin genes",correct:false,
+      teaching_nudge:"Alpha-gene deletion causes alpha-thalassemia and would not elevate HbF and HbA2."},
+    {id:"mx2",text:"Insufficient iron for heme synthesis",correct:false,
+      teaching_nudge:"That is iron deficiency, which gives low ferritin, not the iron overload seen here."},
+    {id:"mx3",text:"A glutamate-to-valine substitution causing hemoglobin polymerization",correct:false,
+      teaching_nudge:"That is the sickle cell mutation, not a quantitative defect in beta-chain production."},
+    {id:"mx4",text:"Defective heme synthesis with iron-laden mitochondria",correct:false,
+      teaching_nudge:"That is sideroblastic anemia, which produces ringed sideroblasts rather than excess alpha chains."}
+  ]},
+  teaching:{
+    discriminator_summary:"A severe microcytic anemia with target cells, raised HbF and HbA2, and onset after the fetal-to-adult hemoglobin switch points to beta-thalassemia major. Iron deficiency is the microcytic look-alike but shows low ferritin and is not associated with raised HbA2.",
+    mechanism_summary:"Beta-globin mutations cut beta-chain output, so unpaired alpha chains precipitate and destroy red cell precursors. The resulting ineffective erythropoiesis drives marrow expansion and paradoxical iron overload.",
+    high_yield_pearl:"Microcytic anemia + target cells + high HbF/HbA2 + iron overload = beta-thalassemia major."}
+}
+];
+
+const CASES = (window.LOCKIN_CASES && window.LOCKIN_CASES.length) ? window.LOCKIN_CASES : EMBEDDED_CASES;
+
+const MILESTONES = [
+  { at:5,  label:"Hematology Atlas — Bronze tier unlocked" },
+  { at:10, label:"Shift Mastery — full Hematology atlas unlocked" }
+];
+
+/* ---------------- state ---------------- */
+let shift, cur;
+function newShift(){
+  return { i:0, hp:100, score:0, acumen:0, solved:0, cards:[], ended:false,
+           startedAt:Date.now(), caseLog:[] };
+}
+function newCur(){ return { used:0, revealed:[], dx:null, mx:null, conf:75 }; }
+
+/* ---------------- image plate ---------------- */
+function plate(iconKey, slot, extraClass){
+  const icon = ICONS[iconKey] || ICONS.atlas;
+  let img = "";
+  const src = resolveImg(slot);
+  if (src){
+    img = '<img class="plate-img" src="'+src+'" alt="" '+
+          'onload="this.classList.add(\'on\')" onerror="this.remove()">';
+  }
+  return '<div class="plate '+(extraClass||"")+'">'+icon+img+
+         '<span class="ghost-tag">Eduovisual illustration</span></div>';
+}
+
+/* ---------------- navigation ---------------- */
+function go(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(name==='case') renderCase();
+  if(name==='lockin') renderLockin();
+}
+
+function startShift(){
+  shift = newShift();
+  cur = newCur();
+  document.getElementById('statusStrip').style.display='flex';
+  document.getElementById('caseCount').textContent = CASES.length+' cases';
+  updateStatus();
+  go('case');
+}
+
+function updateStatus(){
+  document.getElementById('hpV').textContent = shift.hp+' HP';
+  document.getElementById('hpFill').style.width = shift.hp+'%';
+  document.getElementById('scoreV').textContent = shift.score;
+  document.getElementById('acumenV').textContent = shift.acumen;
+}
+
+/* ---------------- case screen ---------------- */
+function renderCase(){
+  const c = CASES[shift.i];
+  document.getElementById('caseNo').textContent =
+    'Case '+(shift.i+1)+' of '+CASES.length+' \u00b7 Presenting complaint';
+  document.getElementById('stemText').textContent = c.stem.presenting_complaint;
+
+  const pips = document.getElementById('pips');
+  pips.innerHTML='';
+  for(let i=0;i<c.clue_budget;i++){
+    const p=document.createElement('div');
+    p.className='pip'+(i<cur.used?' spent':'');
+    pips.appendChild(p);
+  }
+
+  const grid=document.getElementById('clueGrid');
+  grid.innerHTML='';
+  grid.appendChild(buildClue(c.free_clue,true,true));
+  c.clues.forEach((cl,i)=>grid.appendChild(buildClue(cl,cur.revealed.includes(i),false,i)));
+}
+
+function buildClue(cl,isOpen,isFree,idx){
+  const el=document.createElement('div');
+  el.className='clue'+(isFree?' free':'');
+  if(isOpen){
+    el.innerHTML = plate(cl.icon,cl.image_slot)+
+      '<div class="clue-body"><div class="clue-type">'+cl.type+(isFree?' \u00b7 free':'')+'</div>'+
+      '<div class="clue-finding">'+cl.finding+'</div></div>';
+  } else {
+    el.classList.add('clue-locked');
+    el.innerHTML='<div class="locked-face"><div class="lock-q">?</div>'+
+      '<div class="lock-label">'+cl.type+'</div>'+
+      '<div class="lock-cost">Reveal \u00b7 1 action</div></div>';
+    el.onclick=()=>revealClue(idx);
+  }
+  return el;
+}
+
+function revealClue(idx){
+  const c=CASES[shift.i];
+  if(cur.used>=c.clue_budget){
+    document.getElementById('pips').animate(
+      [{transform:'translateX(0)'},{transform:'translateX(-5px)'},
+       {transform:'translateX(5px)'},{transform:'translateX(0)'}],{duration:260});
+    return;
+  }
+  cur.used++;
+  cur.revealed.push(idx);
+  renderCase();
+  const cards=document.querySelectorAll('#clueGrid .clue');
+  cards.forEach(card=>{
+    const t=card.querySelector('.clue-type');
+    if(t && t.textContent.indexOf(c.clues[idx].type)===0) card.classList.add('reveal-anim');
+  });
+}
+
+/* ---------------- lock-in screen ---------------- */
+function renderLockin(){
+  const c=CASES[shift.i];
+  document.getElementById('dxPrompt').textContent=c.diagnosis.prompt;
+  document.getElementById('mxPrompt').textContent=c.mechanism.prompt;
+
+  const dx=document.getElementById('dxOptions');
+  dx.innerHTML='';
+  c.diagnosis.options.forEach((d,i)=>{
+    const b=document.createElement('button');
+    b.className='opt'+(cur.dx===i?' selected':'');
+    b.textContent=d.text;
+    b.onclick=()=>{cur.dx=i;renderLockin();};
+    dx.appendChild(b);
+  });
+  const mx=document.getElementById('mxOptions');
+  mx.innerHTML='';
+  c.mechanism.options.forEach((m,i)=>{
+    const b=document.createElement('button');
+    b.className='opt'+(cur.mx===i?' selected':'')+(cur.dx===null?' disabled':'');
+    b.textContent=m.text;
+    b.onclick=()=>{cur.mx=i;renderLockin();};
+    mx.appendChild(b);
+  });
+  document.getElementById('commitBtn').disabled=(cur.dx===null||cur.mx===null);
+}
+
+const confSlider=document.getElementById('confSlider');
+confSlider.addEventListener('input',()=>{
+  cur.conf=parseInt(confSlider.value,10);
+  document.getElementById('confVal').textContent=cur.conf+'%';
+  document.getElementById('confWord').textContent=confWord(cur.conf);
+});
+function confWord(c){
+  if(c>=95) return 'Certain';
+  if(c>=80) return 'Confident';
+  if(c>=65) return 'Fairly sure';
+  return 'Hedging';
+}
+
+/* ---------------- resolution ---------------- */
+function resolve(){
+  const c=CASES[shift.i];
+  const dxRight=c.diagnosis.options[cur.dx].correct;
+  const mxRight=c.mechanism.options[cur.mx].correct;
+  const win=dxRight&&mxRight;
+  const conf=cur.conf, used=cur.used, budget=c.clue_budget;
+
+  let base=1000, clueCost=used*130, raw=base-clueCost;
+  let confAdj=0, hpLoss=0, score=0, acumenEarned=0;
+
+  if(win){
+    confAdj=Math.round(raw*((conf-50)/50)*0.45);
+    score=raw+confAdj;
+    acumenEarned=(budget-used)+(c.difficulty-1);
+  } else {
+    score=0;
+    hpLoss=25+Math.round((conf-50)/50*35);
+  }
+
+  shift.score+=score;
+  shift.hp=Math.max(0,shift.hp-hpLoss);
+  shift.acumen+=acumenEarned;
+
+  let milestoneHit=null;
+  const cleanSolve=win&&used<=2;
+  if(win){
+    shift.solved++;
+    MILESTONES.forEach(m=>{ if(shift.solved===m.at) milestoneHit=m; });
+    const dxName=c.diagnosis.options[cur.dx].text;
+    if(cleanSolve && shift.cards.indexOf(dxName)<0) shift.cards.push(dxName);
+  }
+  if(shift.hp<=0) shift.ended=true;
+
+  shift.caseLog.push({
+    caseId:c.case_id, win:win, dxRight:dxRight, mxRight:mxRight,
+    cluesUsed:used, confidence:conf, score:score
+  });
+
+  updateStatus();
+  renderResult({c,win,dxRight,mxRight,conf,used,budget,base,clueCost,raw,confAdj,
+    hpLoss,score,acumenEarned,cleanSolve,milestoneHit});
+  go('result');
+}
+
+function calibText(win,conf){
+  if(win&&conf>=85) return ['Sharp call, fully backed.','You were right and you knew it \u2014 the calibration Step 1 rewards.'];
+  if(win&&conf>=65) return ['Correct, sensibly weighted.','Solid confidence for the evidence you had on the table.'];
+  if(win) return ['Right, but you undersold it.','You hedged on a call you had nailed. Trust a clean pattern.'];
+  if(!win&&conf>=85) return ['Overcommitted.','A confident wrong answer is the most expensive mistake on test day.'];
+  if(!win&&conf>=65) return ['Wrong, and a touch overconfident.','Slow down on the discriminating feature before betting big.'];
+  return ['Wrong \u2014 but you flagged the doubt.','Good instinct to hedge an uncertain call; it limited the damage.'];
+}
+
+function renderResult(r){
+  const c=r.c;
+  const calib=calibText(r.win,r.conf);
+  const correctDx=c.diagnosis.options.find(o=>o.correct);
+  const lookalike=c.diagnosis.options.find(o=>o.id===c.diagnosis.lookalike_id);
+  let html='';
+
+  html+='<div class="verdict-flag '+(r.win?'win':'loss')+'">'+
+        '<span class="dot '+(r.win?'win':'loss')+'"></span>'+
+        (r.win?'Case solved':'Misdiagnosis')+'</div>';
+  html+='<div class="verdict-sub">Diagnosis: '+(r.dxRight?'correct':'incorrect')+
+        ' &nbsp;\u00b7&nbsp; Mechanism: '+(r.mxRight?'correct':'incorrect')+'</div>';
+
+  if(r.cleanSolve){
+    html+='<div class="card-earn">'+
+      '<div class="card-mini">'+plate('trophy',correctDx.reference_image_slot)+'</div>'+
+      '<div><div class="ce-tag">Illness script unlocked</div>'+
+      '<div class="ce-name">'+correctDx.text+'</div>'+
+      '<div class="ce-desc">Clean solve in '+r.used+' clue'+(r.used===1?'':'s')+
+      ' \u2014 card added to your collection.</div></div></div>';
+  }
+
+  // ledger
+  html+='<div class="ledger">';
+  html+=lrow('Base case reward','+'+r.base,'');
+  html+=lrow('Clinical actions used ('+r.used+')',r.clueCost?'\u2212'+r.clueCost:'0',r.clueCost?'neg':'');
+  if(r.win){
+    html+=lrow('Confidence adjustment ('+r.conf+'%)',
+      (r.confAdj>=0?'+':'\u2212')+Math.abs(r.confAdj),r.confAdj>=0?'pos':'neg');
+  } else {
+    html+=lrow('Shift vitals lost','\u2212'+r.hpLoss+' HP','neg');
+  }
+  html+='<div class="ledger-row total"><span>Case score</span><span>'+r.score+'</span></div>';
+  html+='</div>';
+
+  html+='<div class="calib"><b>Calibration \u2014 '+calib[0]+'</b> '+calib[1]+'</div>';
+
+  // comparison image block
+  html+='<div class="cmp"><div class="cmp-tag">The discriminating pair</div><div class="cmp-grid">'+
+    '<div class="cmp-cell correct">'+plate('atlas',correctDx.reference_image_slot)+
+      '<div class="cmp-cap"><div class="role win">The answer</div>'+
+      '<div class="nm">'+correctDx.text+'</div></div></div>'+
+    '<div class="cmp-cell">'+plate('atlas',lookalike?lookalike.reference_image_slot:null)+
+      '<div class="cmp-cap"><div class="role">Classic look-alike</div>'+
+      '<div class="nm">'+(lookalike?lookalike.text:'\u2014')+'</div></div></div>'+
+    '</div></div>';
+
+  // acumen + milestone
+  const nextM=MILESTONES.find(m=>shift.solved<m.at);
+  html+='<div class="acumen-box">'+
+    '<div class="acumen-row"><span class="lbl">Acumen earned this case</span>'+
+    '<span class="amt">'+(r.acumenEarned>0?'+'+r.acumenEarned:'0')+'</span></div>';
+  if(nextM){
+    const pct=Math.min(100,Math.round(shift.solved/nextM.at*100));
+    html+='<div class="mile-track"><div class="mile-fill" style="width:'+pct+'%"></div></div>'+
+      '<div class="mile-note">Clean run: '+shift.solved+' / '+nextM.at+
+      ' solved \u2014 next reward: '+nextM.label+'</div>';
+  } else {
+    html+='<div class="mile-note mile-hit">All shift milestones reached.</div>';
+  }
+  if(r.milestoneHit){
+    html+='<div class="mile-note mile-hit" style="margin-top:7px;">\u2605 Milestone reached \u2014 '+
+      r.milestoneHit.label+'</div>';
+  }
+  html+='</div>';
+
+  // teaching
+  html+='<div class="teach"><div class="t-tag">Why \u2014 the Step 1 point</div>'+
+    '<p>'+c.teaching.discriminator_summary+'</p>'+
+    '<p>'+c.teaching.mechanism_summary+'</p>'+
+    '<div class="pearl">'+c.teaching.high_yield_pearl+'</div></div>';
+
+  document.getElementById('resultCard').innerHTML=html;
+
+  const last=(shift.i>=CASES.length-1)||shift.ended;
+  document.getElementById('nextBtn').textContent=last?'See shift summary \u2192':'Next case \u2192';
+}
+
+function lrow(label,val,cls){
+  return '<div class="ledger-row"><span>'+label+'</span>'+
+         '<span class="'+(cls||'')+'">'+val+'</span></div>';
+}
+
+/* ---------------- next / summary ---------------- */
+function nextCase(){
+  if(shift.ended || shift.i>=CASES.length-1){ renderSummary(); go('summary'); return; }
+  shift.i++;
+  cur=newCur();
+  confSlider.value=75;
+  document.getElementById('confVal').textContent='75%';
+  document.getElementById('confWord').textContent=confWord(75);
+  go('case');
+}
+
+function renderSummary(){
+  const played=shift.i+1;
+  const accuracy=played?Math.round(shift.solved/played*100):0;
+  let html='';
+  html+='<div class="kicker">'+(shift.ended?'Shift ended early':'Shift complete')+'</div>';
+  html+='<h1>'+(shift.ended
+    ? 'Vitals depleted \u2014 <em>shift cut short.</em>'
+    : 'Ten patients <em>worked up.</em>')+'</h1>';
+  html+='<p class="lead">'+(shift.ended
+    ? 'Your shift vitals ran out. In a full build the run ends here \u2014 confident misses are what drain them fastest.'
+    : 'Here is how the shift went. Accuracy and Acumen are what carry forward between shifts.')+'</p>';
+
+  html+='<div class="summary-grid">'+
+    '<div class="sum-cell"><div class="k">Shift score</div><div class="v">'+shift.score+'</div></div>'+
+    '<div class="sum-cell"><div class="k">Cases solved</div><div class="v">'+shift.solved+' / '+played+'</div></div>'+
+    '<div class="sum-cell"><div class="k">Diagnostic accuracy</div><div class="v">'+accuracy+'%</div></div>'+
+    '<div class="sum-cell"><div class="k">Vitals remaining</div><div class="v">'+shift.hp+' HP</div></div>'+
+    '<div class="sum-cell"><div class="k">Acumen banked</div><div class="v amber">'+shift.acumen+'</div></div>'+
+    '<div class="sum-cell"><div class="k">Illness cards</div><div class="v amber">'+shift.cards.length+'</div></div>'+
+    '</div>';
+
+  if(shift.cards.length){
+    html+='<div class="teach"><div class="t-tag">Cards collected this shift</div>'+
+      '<p>'+shift.cards.join(' \u00b7 ')+'</p></div>';
+  }
+  const reached=MILESTONES.filter(m=>shift.solved>=m.at);
+  html+='<div class="teach"><div class="t-tag">Milestones</div><p>'+
+    (reached.length?reached.map(m=>m.label).join('<br>'):'No milestones reached this shift \u2014 5 clean solves unlocks the first.')+
+    '</p></div>';
+
+  document.getElementById('summaryCard').innerHTML=html;
+  emitShiftComplete(played,accuracy);
+}
+
+/* ---- bridge: send the finished shift up to the Wix page ---- */
+function emitShiftComplete(played,accuracy){
+  const payload={
+    type:'shift_complete',
+    playerName:window.LOCKIN_PLAYER||'',
+    shift:'Hematology',
+    score:shift.score,
+    casesSolved:shift.solved,
+    casesPlayed:played,
+    accuracy:accuracy,
+    acumen:shift.acumen,
+    vitalsRemaining:shift.hp,
+    cardsEarned:shift.cards.length,
+    cardList:shift.cards.join(','),
+    endedEarly:shift.ended,
+    milestonesReached:MILESTONES.filter(m=>shift.solved>=m.at).map(m=>m.label).join(','),
+    durationSec:Math.round((Date.now()-shift.startedAt)/1000),
+    caseLog:JSON.stringify(shift.caseLog)
+  };
+  try{ if(window.parent && window.parent!==window) window.parent.postMessage(payload,'*'); }
+  catch(e){ /* standalone / no parent — ignore */ }
+}
+
+function restart(){
+  document.getElementById('statusStrip').style.display='none';
+  confSlider.value=75;
+  document.getElementById('confVal').textContent='75%';
+  document.getElementById('confWord').textContent='Fairly sure';
+  go('intro');
+}
+
+/* ============================================================
+   BRIDGE — receive data from the Wix page (postMessage).
+   The Wix page may send:
+     { type:'lockin_init', playerName:'...', images:{slot:uri,...} }
+   playerName is optional; images override the baked-in IMAGE_MAP
+   so the game can be driven live from the LockInImages collection.
+   The game runs fine with no message at all (baked URIs).
+   ============================================================ */
+window.LOCKIN_PLAYER = "";
+window.addEventListener('message', function(ev){
+  const d = ev.data;
+  if(!d || typeof d!=='object') return;
+  if(d.type!=='lockin_init') return;
+
+  if(typeof d.playerName==='string') window.LOCKIN_PLAYER = d.playerName.trim();
+
+  if(d.images && typeof d.images==='object'){
+    let n=0;
+    for(const slot in d.images){
+      if(d.images[slot]){ IMAGE_MAP[slot]=d.images[slot]; n++; }
+    }
+    // re-render the current screen so new images take effect
+    const active=document.querySelector('.screen.active');
+    if(active){
+      const id=active.id.replace('screen-','');
+      if(id==='case') renderCase();
+      else if(id==='result' && shift) { /* result already drawn; leaves as-is */ }
+    }
+    console.log('[lock-in] received '+n+' image URLs from Wix CMS');
+  }
+});
+</script>
+</body>
+</html>
