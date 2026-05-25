@@ -26,7 +26,10 @@
   body::before{content:"";position:fixed;inset:0;
     background-image:repeating-linear-gradient(0deg,rgba(255,255,255,0.014) 0 1px,transparent 1px 3px);
     pointer-events:none;z-index:0;}
-  .app{width:100%;max-width:720px;position:relative;z-index:1;}
+  .app{width:100%;max-width:1080px;position:relative;z-index:1;}
+  /* reading & decision screens stay at a comfortable width even on wide displays */
+  #screen-intro,#screen-lockin,#screen-result,#screen-summary{
+    max-width:760px;margin-left:auto;margin-right:auto;}
 
   .topbar{display:flex;align-items:baseline;justify-content:space-between;
     border-bottom:1px solid var(--line);padding-bottom:13px;margin-bottom:18px;}
@@ -88,6 +91,7 @@
 
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
   @media(max-width:540px){.grid{grid-template-columns:1fr;}}
+  @media(min-width:880px){.grid{grid-template-columns:repeat(3,1fr);}}
   .clue{background:var(--panel);border:1px solid var(--line);border-radius:11px;
     overflow:hidden;transition:border-color .2s,transform .12s;}
   .clue.free{grid-column:auto;}
